@@ -1,7 +1,7 @@
-package com.example.services;
+package com.otus.services;
 
-import com.example.interfaces.QuestionManager;
-import com.example.model.Question;
+import com.otus.interfaces.QuestionManager;
+import com.otus.model.Question;
 
 import java.util.ArrayList;
 import java.util.List;

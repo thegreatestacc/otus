@@ -1,7 +1,7 @@
-package com.example.services;
+package com.otus.services;
 
-import com.example.interfaces.ReadFileContent;
-import com.example.interfaces.ReadFileService;
+import com.otus.interfaces.ReadFileContent;
+import com.otus.interfaces.ReadFileService;
 
 import java.io.BufferedReader;
 import java.io.File;

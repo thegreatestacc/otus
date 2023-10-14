@@ -1,4 +1,4 @@
-package com.example.interfaces;
+package com.otus.interfaces;
 
 import java.io.File;
 

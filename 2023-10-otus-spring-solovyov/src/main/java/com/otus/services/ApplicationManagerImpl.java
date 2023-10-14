@@ -1,11 +1,10 @@
-package com.example.services;
+package com.otus.services;
 
-import com.example.interfaces.ApplicationManager;
-import com.example.interfaces.QuestionManager;
-import com.example.model.Question;
+import com.otus.interfaces.ApplicationManager;
+import com.otus.interfaces.QuestionManager;
+import com.otus.model.Question;
 
 import java.util.List;
-import java.util.Map;
 
 public class ApplicationManagerImpl implements ApplicationManager {
     private final QuestionManager questionManager;

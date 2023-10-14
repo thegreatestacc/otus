@@ -1,6 +1,6 @@
-package com.example.services;
+package com.otus.services;
 
-import com.example.interfaces.ReadFileService;
+import com.otus.interfaces.ReadFileService;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;

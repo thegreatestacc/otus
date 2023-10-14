@@ -1,6 +1,6 @@
-package com.example.interfaces;
+package com.otus.interfaces;
 
-import com.example.model.Question;
+import com.otus.model.Question;
 
 import java.util.List;
 

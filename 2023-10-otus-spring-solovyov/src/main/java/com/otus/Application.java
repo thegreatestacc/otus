@@ -1,6 +1,6 @@
-package com.example;
+package com.otus;
 
-import com.example.services.ApplicationManagerImpl;
+import com.otus.services.ApplicationManagerImpl;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 

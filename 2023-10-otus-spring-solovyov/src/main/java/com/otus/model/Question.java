@@ -1,4 +1,4 @@
-package com.example.model;
+package com.otus.model;
 
 public record Question(int id, String text) {
     @Override
