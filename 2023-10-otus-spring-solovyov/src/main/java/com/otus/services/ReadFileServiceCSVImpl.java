@@ -1,5 +1,6 @@
 package com.otus.services;
 
+import com.otus.utils.UtilConstants;
 import com.otus.interfaces.ReadFileService;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
@@ -10,10 +11,8 @@ import java.io.IOException;
 
 public class ReadFileServiceCSVImpl implements ReadFileService {
 
-    private static final String PATH_TO_FILE = "classpath:questions.csv";
-
     private final ResourceLoader resourceLoader = new DefaultResourceLoader();
-    private final Resource resource = resourceLoader.getResource(PATH_TO_FILE);
+    private final Resource resource = resourceLoader.getResource(UtilConstants.PATH_TO_FILE);
 
     @Override
     public File readFile() {
