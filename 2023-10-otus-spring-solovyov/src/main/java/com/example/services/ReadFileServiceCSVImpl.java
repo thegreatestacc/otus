@@ -8,7 +8,7 @@ import org.springframework.core.io.ResourceLoader;
 import java.io.File;
 import java.io.IOException;
 
-public class ReadCSVFile implements ReadFileService {
+public class ReadFileServiceCSVImpl implements ReadFileService {
 
     private static final String PATH_TO_FILE = "classpath:questions.csv";
 

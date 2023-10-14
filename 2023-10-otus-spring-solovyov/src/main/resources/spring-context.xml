@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+
+    <bean id="resourceLoader" class="org.springframework.core.io.DefaultResourceLoader" abstract="true"/>
+
+    <bean id="applicationManagerImpl" class="com.example.services.ApplicationManagerImpl">
+        <constructor-arg ref="questionManager"/>
+    </bean>
+
+    <bean id="readFileServiceCSV" class="com.example.services.ReadFileServiceCSVImpl"/>
+
+    <bean id="readFileContent" class="com.example.services.ReadFileContentImpl">
+        <constructor-arg ref="readFileServiceCSV"/>
+    </bean>
+
+    <bean id="questionManager" class="com.example.services.QuestionManagerImpl">
+        <constructor-arg ref="readFileContent"/>
+    </bean>
+
+</beans>

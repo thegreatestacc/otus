@@ -1,4 +1,8 @@
 package com.example.model;
 
-public class Question {
+public record Question(int id, String text) {
+    @Override
+    public String toString() {
+        return String.format("%s - %s", id, text);
+    }
 }

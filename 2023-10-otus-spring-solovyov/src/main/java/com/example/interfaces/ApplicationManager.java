@@ -1,4 +1,6 @@
 package com.example.interfaces;
 
-public class ApplicationManager {
+public interface ApplicationManager {
+    void runApplication();
+
 }
