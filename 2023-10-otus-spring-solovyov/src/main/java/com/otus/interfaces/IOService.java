@@ -4,6 +4,6 @@ import com.otus.model.Question;
 
 import java.util.List;
 
-public interface QuestionManager {
-    List<Question> getAllQuestion();
+public interface IOService {
+    void showAllQuestions(List<Question> questions);
 }

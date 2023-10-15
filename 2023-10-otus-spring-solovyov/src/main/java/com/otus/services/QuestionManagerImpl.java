@@ -8,25 +8,20 @@ import java.util.List;
 
 public class QuestionManagerImpl implements QuestionManager {
 
-    private final ReadFileContentImpl readFileContentImpl;
+    private final CsvQuestionDao csvQuestionDao;
 
-    public QuestionManagerImpl(ReadFileContentImpl readFileContentImpl) {
-        this.readFileContentImpl = readFileContentImpl;
+    public QuestionManagerImpl(CsvQuestionDao csvQuestionDao) {
+        this.csvQuestionDao = csvQuestionDao;
     }
 
     @Override
     public List<Question> getAllQuestion() {
         List<Question> result = new ArrayList<>();
         int recordCounter = 1;
-        List<String> strings = readFileContentImpl.readContent();
+        List<String> strings = csvQuestionDao.readAll();
         for (String s : strings) {
             result.add(new Question(recordCounter++, s));
         }
         return result;
-    }
-
-    @Override
-    public void showAllQuestions(List<Question> questions) {
-        questions.forEach(System.out::println);
     }
 }

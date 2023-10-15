@@ -6,13 +6,16 @@
 
     <bean id="resourceLoader" class="org.springframework.core.io.DefaultResourceLoader" abstract="true"/>
 
-    <bean id="applicationManagerImpl" class="com.otus.services.ApplicationManagerImpl">
-        <constructor-arg ref="questionManager"/>
-    </bean>
-
     <bean id="readFileServiceCSV" class="com.otus.services.ReadFileServiceCSVImpl"/>
 
-    <bean id="readFileContent" class="com.otus.services.ReadFileContentImpl">
+    <bean id="ioService" class="com.otus.services.IOServiceImpl"/>
+
+    <bean id="applicationManagerImpl" class="com.otus.services.ApplicationManagerImpl">
+        <constructor-arg ref="questionManager"/>
+        <constructor-arg ref="ioService"/>
+    </bean>
+
+    <bean id="readFileContent" class="com.otus.services.CsvQuestionDao">
         <constructor-arg ref="readFileServiceCSV"/>
     </bean>
 
