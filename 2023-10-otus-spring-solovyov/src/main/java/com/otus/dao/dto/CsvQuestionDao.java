@@ -1,12 +1,13 @@
-package com.otus.services;
+package com.otus.dao.dto;
 
 import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
-import com.otus.interfaces.QuestionDao;
-import com.otus.interfaces.ReadFileService;
+import com.otus.exception.QuestionReadException;
+import com.otus.services.ReadFileService;
+import com.otus.model.Question;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -16,11 +17,12 @@ import java.util.List;
 public class CsvQuestionDao implements QuestionDao {
     private final ReadFileService readFileService;
 
-    public CsvQuestionDao(ReadFileServiceCSVImpl readFileService) {
+    public CsvQuestionDao(ReadFileService readFileService) {
         this.readFileService = readFileService;
     }
 
-    public List<String> readAll() {
+    @Override
+    public List<Question> findAll() {
         List<String> records = new ArrayList<>();
         File file = readFileService.readFile();
         CSVParser parser = new CSVParserBuilder()
@@ -32,9 +34,13 @@ public class CsvQuestionDao implements QuestionDao {
                      .withCSVParser(parser).build()) {
 
             csvReader.readAll().forEach(arr -> records.addAll(Arrays.asList(arr)));
-        } catch (IOException | CsvException e) {
-            throw new RuntimeException();
+
+        } catch (QuestionReadException | IOException | CsvException e) {
+            throw new QuestionReadException(e.getMessage(), e);
         }
-        return records;
+
+        return new ArrayList<>(records.stream()
+                .map(record -> new Question(record, List.of())).toList()
+        );
     }
 }

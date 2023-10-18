@@ -1,7 +1,6 @@
 package com.otus.services;
 
 import com.otus.utils.UtilConstants;
-import com.otus.interfaces.ReadFileService;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;

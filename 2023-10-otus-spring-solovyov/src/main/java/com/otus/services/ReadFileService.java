@@ -1,4 +1,4 @@
-package com.otus.interfaces;
+package com.otus.services;
 
 import java.io.File;
 

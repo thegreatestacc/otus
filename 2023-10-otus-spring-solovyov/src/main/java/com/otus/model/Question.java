@@ -1,8 +1,6 @@
 package com.otus.model;
 
-public record Question(int id, String text) {
-    @Override
-    public String toString() {
-        return String.format("%s - %s", id, text);
-    }
+import java.util.List;
+
+public record Question(String text, List<Answer> answers) {
 }
