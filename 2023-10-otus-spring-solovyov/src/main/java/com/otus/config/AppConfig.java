@@ -1,8 +1,5 @@
 package com.otus.config;
 
-import org.springframework.context.annotation.Configuration;
-
-//@Configuration
 public class AppConfig implements TestFileNameProvider {
 
     private String testFileName;
