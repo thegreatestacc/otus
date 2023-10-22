@@ -1,6 +1,8 @@
 package com.otus.services;
 
 import com.otus.config.TestFileNameProvider;
+import com.otus.exception.QuestionReadException;
+import com.otus.utils.UtilConstants;
 import org.springframework.core.io.DefaultResourceLoader;
 
 import java.io.File;
@@ -21,8 +23,8 @@ public class ReadFileServiceCSVImpl implements ReadFileService {
 
         try {
             return resource.getFile();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (QuestionReadException | IOException e) {
+            throw new QuestionReadException(UtilConstants.FILE_DOES_NOT_EXIST, e);
         }
     }
 }
