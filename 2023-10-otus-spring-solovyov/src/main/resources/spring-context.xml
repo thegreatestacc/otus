@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+
+    <bean id="resourceLoader" class="org.springframework.core.io.DefaultResourceLoader" abstract="true"/>
+
+    <bean id="ioService" class="com.otus.services.StreamsIOService">
+        <constructor-arg index="0">
+            <util:constant static-field="java.lang.System.out"/>
+        </constructor-arg>
+    </bean>
+
+    <bean id="appConfig" class="com.otus.config.AppConfig">
+        <property name="testFileName" value="questions.csv"/>
+    </bean>
+
+    <bean id="csvQuestionDao" class="com.otus.dao.dto.CsvQuestionDao">
+        <constructor-arg ref="readFileServiceCSV"/>
+    </bean>
+
+    <bean id="readFileServiceCSV" class="com.otus.services.ReadFileServiceCSVImpl">
+        <constructor-arg ref="appConfig"/>
+    </bean>
+
+    <bean id="applicationManagerImpl" class="com.otus.services.ApplicationManagerImpl">
+        <constructor-arg ref="csvQuestionDao"/>
+        <constructor-arg ref="ioService"/>
+    </bean>
+
+</beans>
