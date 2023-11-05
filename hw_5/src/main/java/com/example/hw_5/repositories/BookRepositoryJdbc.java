@@ -26,12 +26,21 @@ public class BookRepositoryJdbc implements BookRepository {
 
     @Override
     public Optional<Book> findById(long id) {
-        return Optional.ofNullable(jdbcTemplate.queryForObject("select TITLE, AUTHOR_ID, GENRE_ID where ID = ?", new BookRowMapper()));
+        return Optional.ofNullable(jdbcTemplate.queryForObject(
+                "select BOOKS.ID, TITLE, AUTHOR_ID, FULL_NAME, GENRE_ID, NAME\n" +
+                        "    FROM BOOKS\n" +
+                        "        INNER JOIN PUBLIC.AUTHORS A on A.ID = BOOKS.AUTHOR_ID\n" +
+                        "        INNER JOIN PUBLIC.GENRES G on G.ID = BOOKS.GENRE_ID\n" +
+                        "        WHERE BOOKS.ID = ?", new BookRowMapper(), id));
     }
 
     @Override
     public List<Book> findAll() {
-        return jdbcTemplate.query("select ID, TITLE, AUTHOR_ID, GENRE_ID from BOOKS", new BookRowMapper());
+        return jdbcTemplate.query(
+                "select BOOKS.ID, TITLE, AUTHOR_ID, FULL_NAME, GENRE_ID, NAME\n" +
+                        "FROM BOOKS\n" +
+                        "         INNER JOIN PUBLIC.AUTHORS A on A.ID = BOOKS.AUTHOR_ID\n" +
+                        "         INNER JOIN PUBLIC.GENRES G on G.ID = BOOKS.GENRE_ID;", new BookRowMapper());
     }
 
     @Override
@@ -51,11 +60,11 @@ public class BookRepositoryJdbc implements BookRepository {
         var keyHolder = new GeneratedKeyHolder();
         MapSqlParameterSource parameter = new MapSqlParameterSource();
         parameter.addValue("title", book.getTitle());
-        parameter.addValue("Author", book.getAuthor());
-        parameter.addValue("Genre", book.getGenre());
+        parameter.addValue("AUTHOR_ID", book.getAuthor().getId());
+        parameter.addValue("GENRE_ID", book.getGenre().getId());
 
-        jdbcTemplate.update("insert into BOOKS (title, author_id, genre_id) " +
-                "values (:title, :author_id, :genre_id)", parameter, keyHolder, new String[]{"id"});
+        jdbcTemplate.update("insert into BOOKS (title, AUTHOR_ID, GENRE_ID) values (:title, :AUTHOR_ID, :GENRE_ID)", parameter, keyHolder, new String[]{"id"});
+
 
         book.setId(keyHolder.getKeyAs(Long.class));
         return book;
@@ -63,7 +72,7 @@ public class BookRepositoryJdbc implements BookRepository {
 
     private Book update(Book book) {
         jdbcTemplate.update("insert into BOOKS (id, TITLE, AUTHOR_ID, GENRE_ID) values (?, ?, ?, ?)",
-                book.getId(), book.getTitle(), book.getAuthor(), book.getGenre());
+                book.getId(), book.getTitle(), book.getAuthor().getId(), book.getGenre().getId());
         return book;
     }
 
@@ -71,11 +80,22 @@ public class BookRepositoryJdbc implements BookRepository {
 
         @Override
         public Book mapRow(ResultSet rs, int rowNum) throws SQLException {
+            long authorId = rs.getLong("AUTHOR_ID");
+            String authorFullName = rs.getString("FULL_NAME");
+            var author = new Author(authorId, authorFullName);
+
+            long genreId = rs.getLong("GENRE_ID");
+            String genreName = rs.getString("NAME");
+            var genre = new Genre(genreId, genreName);
+
+            long bookId = rs.getLong("ID");
+            String bookTitle = rs.getString("TITLE");
+
             return new Book(
-                    rs.getLong("id"),
-                    rs.getString("title"),
-                    rs.getObject("AUTHOR_ID", Author.class),
-                    rs.getObject("GENRE_ID", Genre.class));
+                    bookId,
+                    bookTitle,
+                    author,
+                    genre);
         }
     }
 }
