@@ -3,9 +3,10 @@ package com.example.hw_5.repositories;
 import com.example.hw_5.models.Author;
 import com.example.hw_5.models.Book;
 import com.example.hw_5.models.Genre;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
@@ -17,21 +18,33 @@ import java.util.Optional;
 @Repository
 public class BookRepositoryJdbc implements BookRepository {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public BookRepositoryJdbc(JdbcTemplate jdbcTemplate) {
+    public BookRepositoryJdbc(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
 
     @Override
     public Optional<Book> findById(long id) {
-        return Optional.ofNullable(jdbcTemplate.queryForObject(
-                "select BOOKS.ID, TITLE, AUTHOR_ID, FULL_NAME, GENRE_ID, NAME\n" +
-                        "    FROM BOOKS\n" +
-                        "        INNER JOIN PUBLIC.AUTHORS A on A.ID = BOOKS.AUTHOR_ID\n" +
-                        "        INNER JOIN PUBLIC.GENRES G on G.ID = BOOKS.GENRE_ID\n" +
-                        "        WHERE BOOKS.ID = ?", new BookRowMapper(), id));
+
+        var query = "select BOOKS.ID, TITLE, AUTHOR_ID, FULL_NAME, GENRE_ID, NAME\n" +
+                "    FROM BOOKS\n" +
+                "        INNER JOIN PUBLIC.AUTHORS A on A.ID = BOOKS.AUTHOR_ID\n" +
+                "        INNER JOIN PUBLIC.GENRES G on G.ID = BOOKS.GENRE_ID\n" +
+                "        WHERE BOOKS.ID = :ID";
+
+        var namedParameters = new MapSqlParameterSource();
+        namedParameters.addValue("ID", id);
+
+        Book book;
+        try {
+            book = jdbcTemplate.queryForObject(
+                    query, namedParameters, new BookRowMapper());
+            return Optional.ofNullable(book);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
@@ -45,7 +58,7 @@ public class BookRepositoryJdbc implements BookRepository {
 
     @Override
     public Book save(Book book) {
-        if (book.getId() == 0) {
+        if (book.getId() == null) {
             return insert(book);
         }
         return update(book);
@@ -53,26 +66,35 @@ public class BookRepositoryJdbc implements BookRepository {
 
     @Override
     public void deleteById(long id) {
-        jdbcTemplate.update("delete from BOOKS where id = ?", id);
+        var namedParameters = new MapSqlParameterSource();
+        namedParameters.addValue("ID", id);
+        var query = "delete from BOOKS where id = :ID";
+        jdbcTemplate.update(query, namedParameters);
     }
 
     private Book insert(Book book) {
         var keyHolder = new GeneratedKeyHolder();
-        MapSqlParameterSource parameter = new MapSqlParameterSource();
-        parameter.addValue("title", book.getTitle());
-        parameter.addValue("AUTHOR_ID", book.getAuthor().getId());
-        parameter.addValue("GENRE_ID", book.getGenre().getId());
+        var namedParameters = new MapSqlParameterSource();
+        namedParameters.addValue("title", book.getTitle());
+        namedParameters.addValue("AUTHOR_ID", book.getAuthor().getId());
+        namedParameters.addValue("GENRE_ID", book.getGenre().getId());
 
-        jdbcTemplate.update("insert into BOOKS (title, AUTHOR_ID, GENRE_ID) values (:title, :AUTHOR_ID, :GENRE_ID)", parameter, keyHolder, new String[]{"id"});
-
+        jdbcTemplate.update("insert into BOOKS (title, AUTHOR_ID, GENRE_ID) " +
+                "values (:title, :AUTHOR_ID, :GENRE_ID)", namedParameters, keyHolder, new String[]{"id"});
 
         book.setId(keyHolder.getKeyAs(Long.class));
         return book;
     }
 
     private Book update(Book book) {
-        jdbcTemplate.update("insert into BOOKS (id, TITLE, AUTHOR_ID, GENRE_ID) values (?, ?, ?, ?)",
-                book.getId(), book.getTitle(), book.getAuthor().getId(), book.getGenre().getId());
+        var namedParameters = new MapSqlParameterSource();
+        namedParameters.addValue("id", book.getId());
+        namedParameters.addValue("TITLE", book.getTitle());
+        namedParameters.addValue("AUTHOR_ID", book.getAuthor().getId());
+        namedParameters.addValue("GENRE_ID", book.getGenre().getId());
+        var query = "insert into BOOKS (id, TITLE, AUTHOR_ID, GENRE_ID) " +
+                "values (:id, :TITLE, :AUTHOR_ID, :GENRE_ID)";
+        jdbcTemplate.update(query, namedParameters);
         return book;
     }
 

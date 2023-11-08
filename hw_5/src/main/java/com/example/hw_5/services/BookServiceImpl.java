@@ -1,6 +1,6 @@
 package com.example.hw_5.services;
 
-import com.example.hw_5.exceptions.EntityNotFoundException;
+import com.example.hw_5.exceptions.NotFoundException;
 import com.example.hw_5.models.Book;
 import com.example.hw_5.repositories.*;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +35,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book update(long id, String title, long authorId, long genreId) {
+        Optional<Book> optional = findById(id);
+        if (optional.isPresent()) throw new RuntimeException(String.format("Book with id %d already exist", id));
         return save(id, title, authorId, genreId);
     }
 
@@ -45,9 +47,9 @@ public class BookServiceImpl implements BookService {
 
     private Book save(long id, String title, long authorId, long genreId) {
         var author = authorRepository.findById(authorId)
-                .orElseThrow(() -> new EntityNotFoundException("Author with id %d not found".formatted(authorId)));
+                .orElseThrow(() -> new NotFoundException("Author with id %d not found".formatted(authorId)));
         var genre = genreRepository.findById(genreId)
-                .orElseThrow(() -> new EntityNotFoundException("Genre with id %d not found".formatted(genreId)));
+                .orElseThrow(() -> new NotFoundException("Genre with id %d not found".formatted(genreId)));
         var book = new Book(id, title, author, genre);
         return bookRepository.save(book);
     }

@@ -1,8 +1,10 @@
 package com.example.hw_5.repositories;
 
 import com.example.hw_5.models.Author;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
@@ -13,9 +15,9 @@ import java.util.Optional;
 @Repository
 public class AuthorRepositoryJdbc implements AuthorRepository {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public AuthorRepositoryJdbc(JdbcTemplate jdbcTemplate) {
+    public AuthorRepositoryJdbc(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -26,8 +28,17 @@ public class AuthorRepositoryJdbc implements AuthorRepository {
 
     @Override
     public Optional<Author> findById(long id) {
-        return Optional.ofNullable(jdbcTemplate
-                .queryForObject("select ID, FULL_NAME from AUTHORS where ID = ?", new AuthorRowMapper(), id));
+
+        var query = "select ID, FULL_NAME from AUTHORS where ID = :ID";
+        var namedParameters = new MapSqlParameterSource();
+        namedParameters.addValue("ID", id);
+        Author author;
+        try {
+            author = jdbcTemplate.queryForObject(query, namedParameters, new AuthorRowMapper());
+            return Optional.ofNullable(author);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     private static class AuthorRowMapper implements RowMapper<Author> {

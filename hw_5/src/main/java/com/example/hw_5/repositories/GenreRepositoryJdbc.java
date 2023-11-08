@@ -1,8 +1,10 @@
 package com.example.hw_5.repositories;
 
 import com.example.hw_5.models.Genre;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
@@ -13,9 +15,9 @@ import java.util.Optional;
 @Repository
 public class GenreRepositoryJdbc implements GenreRepository {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public GenreRepositoryJdbc(JdbcTemplate jdbcTemplate) {
+    public GenreRepositoryJdbc(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -26,8 +28,16 @@ public class GenreRepositoryJdbc implements GenreRepository {
 
     @Override
     public Optional<Genre> findById(long id) {
-        return Optional.ofNullable(jdbcTemplate
-                .queryForObject("select ID, NAME from GENRES where id = ?", new GenreRowMapper(), id));
+        var namedParameters = new MapSqlParameterSource();
+        namedParameters.addValue("ID", id);
+        var query = "select ID, NAME from GENRES where id = :ID";
+        Genre genre;
+        try {
+            genre = jdbcTemplate.queryForObject(query, namedParameters, new GenreRowMapper());
+            return Optional.ofNullable(genre);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     private static class GenreRowMapper implements RowMapper<Genre> {

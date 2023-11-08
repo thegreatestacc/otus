@@ -6,15 +6,19 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.test.context.TestPropertySource;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @JdbcTest
+@TestPropertySource("classpath:application-test.yml")
 class AuthorRepositoryJdbcTest {
 
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    NamedParameterJdbcTemplate jdbcTemplate;
 
     @Mock
     AuthorRepositoryJdbc authorRepositoryJdbc;
@@ -35,4 +39,8 @@ class AuthorRepositoryJdbcTest {
                 authorRepositoryJdbc.findById(1).orElse(new Author()).getFullName());
     }
 
+    @Test
+    void whenFindById_authorNotFound() {
+        assertEquals(Optional.empty(), authorRepositoryJdbc.findById(5));
+    }
 }
