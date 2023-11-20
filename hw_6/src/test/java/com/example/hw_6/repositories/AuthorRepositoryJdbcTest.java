@@ -1,32 +1,24 @@
 package com.example.hw_6.repositories;
 
-import com.example.hw_6.models.Author;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@JdbcTest
+@DataJpaTest
 @TestPropertySource("classpath:application-test.yml")
+@Import(AuthorRepositoryJdbc.class)
+@Transactional(propagation = Propagation.NEVER)
 class AuthorRepositoryJdbcTest {
-
-    @Autowired
-    NamedParameterJdbcTemplate jdbcTemplate;
-
     @Mock
     AuthorRepositoryJdbc authorRepositoryJdbc;
-
-    @BeforeEach
-    void setUp() {
-        authorRepositoryJdbc = new AuthorRepositoryJdbc(jdbcTemplate);
-    }
 
     @Test
     void findAll() {
@@ -35,8 +27,10 @@ class AuthorRepositoryJdbcTest {
 
     @Test
     void findById() {
-        assertEquals("Author_1",
-                authorRepositoryJdbc.findById(1).orElse(new Author()).getFullName());
+        var optional = authorRepositoryJdbc.findById(1);
+        var expectedName = optional.get().getFullName();
+        assertEquals(expectedName, "Author_1");
+
     }
 
     @Test

@@ -1,32 +1,25 @@
 package com.example.hw_6.repositories;
 
 import com.example.hw_6.models.Genre;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@JdbcTest
+@DataJpaTest
 @TestPropertySource("classpath:application-test.yml")
+@Import(AuthorRepositoryJdbc.class)
+@Transactional(propagation = Propagation.NEVER)
 class GenreRepositoryJdbcTest {
-
-    @Autowired
-    NamedParameterJdbcTemplate jdbcTemplate;
-
     @Mock
     GenreRepositoryJdbc genreRepositoryJdbc;
-
-    @BeforeEach
-    void setUp() {
-        genreRepositoryJdbc = new GenreRepositoryJdbc(jdbcTemplate);
-    }
 
     @Test
     void findAll() {

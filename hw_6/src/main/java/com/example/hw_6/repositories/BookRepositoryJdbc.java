@@ -3,31 +3,26 @@ package com.example.hw_6.repositories;
 import com.example.hw_6.models.Author;
 import com.example.hw_6.models.Book;
 import com.example.hw_6.models.Genre;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
-//@RequiredArgsConstructor
 public class BookRepositoryJdbc implements BookRepository {
 
-    private final NamedParameterJdbcTemplate jdbcTemplate;
+    @PersistenceContext
+    private EntityManager entityManager;
 
-    public BookRepositoryJdbc(NamedParameterJdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public BookRepositoryJdbc(EntityManager entityManager) {
+        this.entityManager = entityManager;
     }
-
 
     @Override
     public Optional<Book> findById(long id) {
@@ -43,8 +38,7 @@ public class BookRepositoryJdbc implements BookRepository {
 
         Book book;
         try {
-            book = jdbcTemplate.queryForObject(
-                    query, namedParameters, new BookRowMapper());
+            book = entityManager.find(Book.class, id);
             return Optional.ofNullable(book);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -53,11 +47,12 @@ public class BookRepositoryJdbc implements BookRepository {
 
     @Override
     public List<Book> findAll() {
-        return jdbcTemplate.query(
-                "select BOOKS.ID, TITLE, AUTHOR_ID, FULL_NAME, GENRE_ID, NAME\n" +
-                        "FROM BOOKS\n" +
-                        "         INNER JOIN PUBLIC.AUTHORS A on A.ID = BOOKS.AUTHOR_ID\n" +
-                        "         INNER JOIN PUBLIC.GENRES G on G.ID = BOOKS.GENRE_ID;", new BookRowMapper());
+        var query = "select BOOKS.ID, TITLE, AUTHOR_ID, FULL_NAME, GENRE_ID, NAME\n" +
+                "FROM BOOKS\n" +
+                "         INNER JOIN PUBLIC.AUTHORS A on A.ID = BOOKS.AUTHOR_ID\n" +
+                "         INNER JOIN PUBLIC.GENRES G on G.ID = BOOKS.GENRE_ID;";
+        var result = entityManager.createQuery(query);
+        return result.getResultList();
     }
 
     @Override
@@ -73,7 +68,7 @@ public class BookRepositoryJdbc implements BookRepository {
         var namedParameters = new MapSqlParameterSource();
         namedParameters.addValue("ID", id);
         var query = "delete from BOOKS where id = :ID";
-        jdbcTemplate.update(query, namedParameters);
+        entityManager.remove(query);
     }
 
     private Book insert(Book book) {
@@ -83,8 +78,8 @@ public class BookRepositoryJdbc implements BookRepository {
         namedParameters.addValue("AUTHOR_ID", book.getAuthor().getId());
         namedParameters.addValue("GENRE_ID", book.getGenre().getId());
 
-        jdbcTemplate.update("insert into BOOKS (title, AUTHOR_ID, GENRE_ID) " +
-                "values (:title, :AUTHOR_ID, :GENRE_ID)", namedParameters, keyHolder, new String[]{"id"});
+        entityManager.refresh("insert into BOOKS (title, AUTHOR_ID, GENRE_ID) " +
+                "values (:title, :AUTHOR_ID, :GENRE_ID)");
 
         book.setId(keyHolder.getKeyAs(Long.class));
         return book;
@@ -98,7 +93,7 @@ public class BookRepositoryJdbc implements BookRepository {
         namedParameters.addValue("GENRE_ID", book.getGenre().getId());
         var query = "insert into BOOKS (id, TITLE, AUTHOR_ID, GENRE_ID) " +
                 "values (:id, :TITLE, :AUTHOR_ID, :GENRE_ID)";
-        jdbcTemplate.update(query, namedParameters);
+        entityManager.refresh(query);
         return book;
     }
 

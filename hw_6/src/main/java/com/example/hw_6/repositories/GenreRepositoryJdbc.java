@@ -1,50 +1,30 @@
 package com.example.hw_6.repositories;
 
 import com.example.hw_6.models.Genre;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
 public class GenreRepositoryJdbc implements GenreRepository {
 
-    private final NamedParameterJdbcTemplate jdbcTemplate;
+    @PersistenceContext
+    private EntityManager entityManager;
 
-    public GenreRepositoryJdbc(NamedParameterJdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public GenreRepositoryJdbc(EntityManager entityManager) {
+        this.entityManager = entityManager;
     }
 
     @Override
     public List<Genre> findAll() {
-        return jdbcTemplate.query("select ID, NAME from GENRES", new GenreRowMapper());
+        TypedQuery<Genre> result = entityManager.createQuery("select * from genres", Genre.class);
+        return result.getResultList();
     }
 
     @Override
     public Optional<Genre> findById(long id) {
-        var namedParameters = new MapSqlParameterSource();
-        namedParameters.addValue("ID", id);
-        var query = "select ID, NAME from GENRES where id = :ID";
-        Genre genre;
-        try {
-            genre = jdbcTemplate.queryForObject(query, namedParameters, new GenreRowMapper());
-            return Optional.ofNullable(genre);
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
-    }
-
-    private static class GenreRowMapper implements RowMapper<Genre> {
-
-        @Override
-        public Genre mapRow(ResultSet rs, int i) throws SQLException {
-            return new Genre(rs.getLong("id"), rs.getString("name"));
-        }
+        return Optional.ofNullable(entityManager.find(Genre.class, id));
     }
 }
