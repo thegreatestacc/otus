@@ -1,13 +1,18 @@
 package com.example.hw_2;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+import com.example.hw_2.services.TestRunnerService;
+import org.springframework.context.ApplicationContext;
+
 public class Hw2Application {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Hw2Application.class, args);
+
+		//Создать контекст на основе Annotation/Java конфигурирования
+		ApplicationContext context = null;
+		var testRunnerService = context.getBean(TestRunnerService.class);
+		testRunnerService.run();
+
 	}
 
 }
