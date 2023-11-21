@@ -3,8 +3,10 @@ package com.example.hw_2.services;
 import com.example.hw_2.config.TestConfig;
 import com.example.hw_2.domain.TestResult;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
+@Service
 public class ResultServiceImpl implements ResultService {
 
     private final TestConfig testConfig;

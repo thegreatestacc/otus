@@ -1,8 +1,10 @@
 package com.example.hw_2.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
+@Service
 public class TestRunnerServiceImpl implements TestRunnerService {
 
     private final TestService testService;

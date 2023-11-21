@@ -2,8 +2,10 @@ package com.example.hw_2.services;
 
 import com.example.hw_2.domain.Student;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
+@Service
 public class StudentServiceImpl implements StudentService {
 
     private final IOService ioService;
