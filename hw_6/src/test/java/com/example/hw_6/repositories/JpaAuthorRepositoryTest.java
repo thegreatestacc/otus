@@ -1,11 +1,11 @@
 package com.example.hw_6.repositories;
 
-import com.example.hw_6.models.Genre;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,24 +15,27 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
 @TestPropertySource("classpath:application-test.yml")
-@Import(AuthorRepositoryJdbc.class)
+@Import(JpaAuthorRepository.class)
 @Transactional(propagation = Propagation.NEVER)
-class GenreRepositoryJdbcTest {
+class JpaAuthorRepositoryTest {
     @Mock
-    GenreRepositoryJdbc genreRepositoryJdbc;
+    JpaAuthorRepository jpaAuthorRepository;
 
     @Test
     void findAll() {
-        assertEquals(3, genreRepositoryJdbc.findAll().size());
+        assertEquals(3, jpaAuthorRepository.findAll().size());
     }
 
     @Test
     void findById() {
-        assertEquals("Genre_1", genreRepositoryJdbc.findById(1).orElse(new Genre()).getName());
+        var optional = jpaAuthorRepository.findById(1);
+        var expectedName = optional.get().getFullName();
+        assertEquals(expectedName, "Author_1");
+
     }
 
     @Test
-    void whenFindById_genreNotFound() {
-        assertEquals(Optional.empty(), genreRepositoryJdbc.findById(5));
+    void whenFindById_authorNotFound() {
+        assertEquals(Optional.empty(), jpaAuthorRepository.findById(5));
     }
 }

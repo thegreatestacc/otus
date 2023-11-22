@@ -15,10 +15,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @JdbcTest
 @TestPropertySource("classpath:application-test.yml")
-class BookRepositoryJdbcTest {
+class JpaBookRepositoryTest {
 
     @Mock
-    BookRepositoryJdbc bookRepositoryJdbc;
+    JpaBookRepository jpaBookRepository;
 
     Book book;
     Author author;
@@ -33,28 +33,28 @@ class BookRepositoryJdbcTest {
 
     @Test
     void findById() {
-        assertEquals("BookTitle_1", bookRepositoryJdbc.findById(1).orElse(new Book()).getTitle());
+        assertEquals("BookTitle_1", jpaBookRepository.findById(1).orElse(new Book()).getTitle());
     }
 
     @Test
     void whenFindById_bookNotFound() {
-        assertEquals(Optional.empty(), bookRepositoryJdbc.findById(5));
+        assertEquals(Optional.empty(), jpaBookRepository.findById(5));
     }
 
     @Test
     void findAll() {
-        assertEquals(3, bookRepositoryJdbc.findAll().size());
+        assertEquals(3, jpaBookRepository.findAll().size());
     }
 
     @Test
     void save() {
-        bookRepositoryJdbc.save(book);
-        assertEquals(4, bookRepositoryJdbc.findAll().size());
+        jpaBookRepository.save(book);
+        assertEquals(4, jpaBookRepository.findAll().size());
     }
 
     @Test
     void deleteById() {
-        bookRepositoryJdbc.deleteById(1);
-        assertEquals(2, bookRepositoryJdbc.findAll().size());
+        jpaBookRepository.deleteById(1);
+        assertEquals(2, jpaBookRepository.findAll().size());
     }
 }

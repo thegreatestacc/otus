@@ -3,10 +3,12 @@ package com.example.hw_6.repositories;
 import com.example.hw_6.models.Author;
 import com.example.hw_6.models.Book;
 import com.example.hw_6.models.Genre;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -15,14 +17,12 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-public class BookRepositoryJdbc implements BookRepository {
+@RequiredArgsConstructor
+@Repository
+public class JpaBookRepository implements BookRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
-
-    public BookRepositoryJdbc(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
 
     @Override
     public Optional<Book> findById(long id) {
