@@ -1,12 +1,11 @@
 package com.example.hw_6.repositories;
 
 import com.example.hw_6.models.Genre;
-import lombok.RequiredArgsConstructor;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,11 +13,7 @@ import java.util.Optional;
 public class JpaGenreRepository implements GenreRepository {
 
     @PersistenceContext
-    private final EntityManager entityManager;
-
-    public JpaGenreRepository(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
+    private EntityManager entityManager;
 
     @Override
     public List<Genre> findAll() {

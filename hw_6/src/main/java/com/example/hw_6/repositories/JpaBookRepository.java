@@ -1,19 +1,16 @@
 package com.example.hw_6.repositories;
 
-import com.example.hw_6.models.Author;
 import com.example.hw_6.models.Book;
-import com.example.hw_6.models.Genre;
+import com.example.hw_6.models.Comment;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -97,26 +94,8 @@ public class JpaBookRepository implements BookRepository {
         return book;
     }
 
-    private static class BookRowMapper implements RowMapper<Book> {
-
-        @Override
-        public Book mapRow(ResultSet rs, int rowNum) throws SQLException {
-            long authorId = rs.getLong("AUTHOR_ID");
-            String authorFullName = rs.getString("FULL_NAME");
-            var author = new Author(authorId, authorFullName);
-
-            long genreId = rs.getLong("GENRE_ID");
-            String genreName = rs.getString("NAME");
-            var genre = new Genre(genreId, genreName);
-
-            long bookId = rs.getLong("ID");
-            String bookTitle = rs.getString("TITLE");
-
-            return new Book(
-                    bookId,
-                    bookTitle,
-                    author,
-                    genre);
-        }
+    @Override
+    public Comment findCommentById(long id) {
+        return entityManager.find(Comment.class, id);
     }
 }
