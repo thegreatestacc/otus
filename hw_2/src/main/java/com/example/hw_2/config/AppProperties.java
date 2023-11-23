@@ -18,6 +18,9 @@ public class AppProperties implements TestConfig, TestFileNameProvider {
     @Value("${test.fileName}")
     private String testFileName;
 
+    @Value("${test.answersFileName}")
+    private String answersFileName;
+
     @Override
     public int getRightAnswersCountToPass() {
         return Integer.parseInt(rightAnswersCountToPass);
@@ -26,5 +29,10 @@ public class AppProperties implements TestConfig, TestFileNameProvider {
     @Override
     public String getTestFileName() {
         return testFileName;
+    }
+
+    @Override
+    public String getAnswersFileName() {
+        return answersFileName;
     }
 }
