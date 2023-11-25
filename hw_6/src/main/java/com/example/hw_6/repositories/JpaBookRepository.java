@@ -2,14 +2,12 @@ package com.example.hw_6.repositories;
 
 import com.example.hw_6.models.Book;
 import com.example.hw_6.models.Comment;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
+import javax.persistence.*;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,9 +1,7 @@
 package com.example.hw_6.repositories;
 
 import com.example.hw_6.models.Genre;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
+import javax.persistence.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

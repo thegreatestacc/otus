@@ -1,8 +1,7 @@
 package com.example.hw_6.repositories;
 
 import com.example.hw_6.models.Comment;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import javax.persistence.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
