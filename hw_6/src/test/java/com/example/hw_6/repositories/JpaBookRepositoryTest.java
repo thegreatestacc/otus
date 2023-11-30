@@ -2,13 +2,10 @@ package com.example.hw_6.repositories;
 
 import com.example.hw_6.models.Author;
 import com.example.hw_6.models.Book;
-import com.example.hw_6.models.Comment;
 import com.example.hw_6.models.Genre;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
@@ -35,14 +32,12 @@ class JpaBookRepositoryTest {
     Book book;
     Author author;
     Genre genre;
-    Comment comment;
 
     @BeforeEach
     void setUp() {
         author = new Author(7L, "NEW_AUTHOR");
         genre = new Genre(7L, "NEW_NAME");
-        comment = new Comment(7L, "test_comment");
-        book = new Book(7L, "new_title", author, genre, comment);
+        book = new Book(7L, "new_title", author, genre);
     }
 
     @Test

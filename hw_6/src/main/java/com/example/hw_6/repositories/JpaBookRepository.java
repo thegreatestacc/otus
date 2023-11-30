@@ -1,14 +1,14 @@
 package com.example.hw_6.repositories;
 
 import com.example.hw_6.models.Book;
-import com.example.hw_6.models.Comment;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
-import javax.persistence.*;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityGraph;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,16 +28,13 @@ public class JpaBookRepository implements BookRepository {
                 "        INNER JOIN PUBLIC.GENRES G on G.ID = BOOKS.GENRE_ID\n" +
                 "        WHERE BOOKS.ID = :ID";
 
-        var namedParameters = new MapSqlParameterSource();
-        namedParameters.addValue("ID", id);
+        EntityGraph<?> entityGraph = entityManager.getEntityGraph("book-entity-graph");
 
-        Book book;
-        try {
-            book = entityManager.find(Book.class, id);
-            return Optional.ofNullable(book);
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
+        TypedQuery<Book> typedQuery = entityManager.createQuery(query, Book.class);
+
+        typedQuery.setHint("javax.persistence.fetchgraph", entityGraph);
+
+        return Optional.ofNullable(typedQuery.getSingleResult());
     }
 
     @Override
@@ -46,8 +43,14 @@ public class JpaBookRepository implements BookRepository {
                 "FROM BOOKS\n" +
                 "         INNER JOIN PUBLIC.AUTHORS A on A.ID = BOOKS.AUTHOR_ID\n" +
                 "         INNER JOIN PUBLIC.GENRES G on G.ID = BOOKS.GENRE_ID;";
-        var result = entityManager.createQuery(query);
-        return result.getResultList();
+
+        EntityGraph<?> entityGraph = entityManager.getEntityGraph("book-entity-graph");
+
+        TypedQuery<Book> typedQuery = entityManager.createQuery(query, Book.class);
+
+        typedQuery.setHint("javax.persistence.fetchgraph", entityGraph);
+
+        return typedQuery.getResultList();
     }
 
     @Override
@@ -60,40 +63,23 @@ public class JpaBookRepository implements BookRepository {
 
     @Override
     public void deleteById(long id) {
-        var namedParameters = new MapSqlParameterSource();
-        namedParameters.addValue("ID", id);
-        var query = "delete from BOOKS where id = :ID";
-        entityManager.remove(query);
+        Book book = entityManager.find(Book.class, id);
+        entityManager.remove(book);
     }
 
-    private Book insert(Book book) {
-        var keyHolder = new GeneratedKeyHolder();
-        var namedParameters = new MapSqlParameterSource();
-        namedParameters.addValue("title", book.getTitle());
-        namedParameters.addValue("AUTHOR_ID", book.getAuthor().getId());
-        namedParameters.addValue("GENRE_ID", book.getGenre().getId());
-
-        entityManager.refresh("insert into BOOKS (title, AUTHOR_ID, GENRE_ID) " +
-                "values (:title, :AUTHOR_ID, :GENRE_ID)");
-
-        book.setId(keyHolder.getKeyAs(Long.class));
+    @Transactional
+    public Book insert(Book book) {
+        entityManager.persist(book);
         return book;
     }
 
-    private Book update(Book book) {
-        var namedParameters = new MapSqlParameterSource();
-        namedParameters.addValue("id", book.getId());
-        namedParameters.addValue("TITLE", book.getTitle());
-        namedParameters.addValue("AUTHOR_ID", book.getAuthor().getId());
-        namedParameters.addValue("GENRE_ID", book.getGenre().getId());
-        var query = "insert into BOOKS (id, TITLE, AUTHOR_ID, GENRE_ID) " +
-                "values (:id, :TITLE, :AUTHOR_ID, :GENRE_ID)";
-        entityManager.refresh(query);
-        return book;
-    }
-
-    @Override
-    public Comment findCommentById(long id) {
-        return entityManager.find(Comment.class, id);
+    @Transactional
+    public Book update(Book book) {
+        Book bookForUpdate = entityManager.find(Book.class, book);
+        bookForUpdate.setTitle(book.getTitle());
+        bookForUpdate.setAuthor(book.getAuthor());
+        bookForUpdate.setGenre(book.getGenre());
+        entityManager.refresh(bookForUpdate);
+        return bookForUpdate;
     }
 }

@@ -1,12 +1,13 @@
 package com.example.hw_6.repositories;
 
 import com.example.hw_6.models.Comment;
-import javax.persistence.*;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -15,9 +16,16 @@ public class JpaCommentRepository implements CommentRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
+
     @Override
     public Optional<Comment> findById(long id) {
         return Optional.ofNullable(entityManager.find(Comment.class, id));
+    }
+
+    @Override
+    public List<Comment> findAll() {
+        var query = "select comment from comments";
+        return entityManager.createQuery(query, Comment.class).getResultList();
     }
 
     @Override
