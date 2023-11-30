@@ -24,11 +24,14 @@ public class AppProperties implements TestConfig, TestFileNameProvider, LocaleCo
 
     private Map<String, String> fileNameByLocaleTag;
 
+    private Map<String, String> fileNameWithAnswersByLocalTag;
+
     @ConstructorBinding
-    public AppProperties(int rightAnswersCountToPass, Locale locale, Map<String, String> fileNameByLocaleTag) {
+    public AppProperties(int rightAnswersCountToPass, Locale locale, Map<String, String> fileNameByLocaleTag, Map<String, String> fileNameWithAnswersByLocalTag) {
         this.rightAnswersCountToPass = rightAnswersCountToPass;
         this.locale = locale;
         this.fileNameByLocaleTag = fileNameByLocaleTag;
+        this.fileNameWithAnswersByLocalTag = fileNameWithAnswersByLocalTag;
     }
 
     public void setLocale(String locale) {
@@ -43,5 +46,10 @@ public class AppProperties implements TestConfig, TestFileNameProvider, LocaleCo
     @Override
     public String getTestFileName() {
         return fileNameByLocaleTag.get(locale.toLanguageTag());
+    }
+
+    @Override
+    public String getAnswersFileName() {
+        return fileNameWithAnswersByLocalTag.get(locale.toLanguageTag());
     }
 }

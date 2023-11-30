@@ -1,5 +1,7 @@
 package com.example.hw_3.service;
 
-public interface TestRunnerService {
+import org.springframework.boot.CommandLineRunner;
+
+public interface TestRunnerService extends CommandLineRunner {
     void run();
 }

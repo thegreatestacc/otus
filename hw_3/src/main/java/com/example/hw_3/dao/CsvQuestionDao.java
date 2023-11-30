@@ -1,6 +1,8 @@
 package com.example.hw_3.dao;
 
+import com.example.hw_3.config.AppProperties;
 import com.example.hw_3.config.TestFileNameProvider;
+import com.example.hw_3.domain.Answer;
 import com.example.hw_3.domain.Question;
 import com.example.hw_3.exception.QuestionReadException;
 import com.opencsv.CSVParser;
@@ -23,6 +25,8 @@ import java.util.List;
 public class CsvQuestionDao implements QuestionDao {
     private final TestFileNameProvider fileNameProvider;
 
+    private final AppProperties appProperties;
+
     @Override
     public List<Question> findAll() {
         List<String> records = new ArrayList<>();
@@ -39,6 +43,23 @@ public class CsvQuestionDao implements QuestionDao {
         return new ArrayList<>(records.stream()
                 .map(record -> new Question(record, List.of())).toList()
         );
+    }
+
+    @Override
+    public List<Answer> findAllAnswers() {
+        List<String> records = new ArrayList<>();
+        File file = readFile(fileNameProvider.getAnswersFileName());
+        CSVParser parser = getCsvParser();
+        try (Reader reader = new BufferedReader(new FileReader(file));
+             CSVReader csvReader = new CSVReaderBuilder(reader)
+                     .withCSVParser(parser).build()) {
+
+            csvReader.readAll().forEach(arr -> records.addAll(Arrays.asList(arr)));
+        } catch (QuestionReadException | IOException | CsvException e) {
+            throw new QuestionReadException(e.getMessage(), e);
+        }
+        return new ArrayList<>(records.stream()
+                .map(record -> new Answer(record, true)).toList());
     }
 
     private static File readFile(String fileName) {

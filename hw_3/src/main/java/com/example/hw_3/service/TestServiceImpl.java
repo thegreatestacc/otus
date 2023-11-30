@@ -1,10 +1,13 @@
 package com.example.hw_3.service;
 
 import com.example.hw_3.dao.QuestionDao;
+import com.example.hw_3.domain.Answer;
 import com.example.hw_3.domain.Student;
 import com.example.hw_3.domain.TestResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -16,6 +19,7 @@ public class TestServiceImpl implements TestService {
 
     @Override
     public TestResult executeTestFor(Student student) {
+        List<Answer> correctAnswers = questionDao.findAllAnswers();
         ioService.printLine("");
         ioService.printLineLocalized("TestService.answer.the.questions");
         ioService.printLine("");
@@ -23,10 +27,14 @@ public class TestServiceImpl implements TestService {
         var questions = questionDao.findAll();
         var testResult = new TestResult(student);
 
-        for (var question: questions) {
+        for (int i = 0; i < questions.size(); i++) {
             var isAnswerValid = false; // Задать вопрос, получить ответ
-            testResult.applyAnswer(question, isAnswerValid);
+            ioService.printLine(questions.get(i).text());
+            var answer = ioService.readStringWithPrompt("get answer for this question:");
+            if (answer.equalsIgnoreCase(correctAnswers.get(i).text())) isAnswerValid = true;
+            testResult.applyAnswer(questions.get(i), isAnswerValid);
         }
+
         return testResult;
     }
 
