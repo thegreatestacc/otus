@@ -1,6 +1,5 @@
 package com.example.hw_3.dao;
 
-import com.example.hw_3.config.AppProperties;
 import com.example.hw_3.config.TestFileNameProvider;
 import com.example.hw_3.domain.Answer;
 import com.example.hw_3.domain.Question;
@@ -24,8 +23,6 @@ import java.util.List;
 @Component
 public class CsvQuestionDao implements QuestionDao {
     private final TestFileNameProvider fileNameProvider;
-
-    private final AppProperties appProperties;
 
     @Override
     public List<Question> findAll() {
