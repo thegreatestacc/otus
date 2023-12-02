@@ -10,11 +10,10 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -60,11 +59,16 @@ public class CsvQuestionDao implements QuestionDao {
     }
 
     private static File readFile(String fileName) {
-        try {
-            Resource resource = new ClassPathResource(fileName);
-            return resource.getFile();
-        } catch (Exception e) {
-            throw new QuestionReadException("Can not upload file", e);
+        var classLoader = CsvQuestionDao.class.getClassLoader();
+        var resource = classLoader.getResource(fileName);
+        if (resource == null) {
+            throw new QuestionReadException("Can not upload file. Resource is null!");
+        } else {
+            try {
+                return new File(resource.toURI());
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

@@ -2,17 +2,19 @@ package com.example.hw_3.dao;
 
 import com.example.hw_3.domain.Question;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
+@TestPropertySource("classpath:")
 class CsvQuestionDaoTest {
 
-    @Mock
+    @Autowired
     CsvQuestionDao csvQuestionDao;
 
     @Test
