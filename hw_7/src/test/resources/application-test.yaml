@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:maindb
+    url: jdbc:h2:mem:testdb
   jpa:
     generate-ddl: false
     hibernate:
@@ -12,7 +12,6 @@ spring:
       mode: always
       schema-locations: schema.sql
       data-locations: data.sql
-
   h2:
     console:
       enabled: true
