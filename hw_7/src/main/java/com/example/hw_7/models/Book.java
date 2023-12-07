@@ -1,21 +1,17 @@
 package com.example.hw_7.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
+import javax.persistence.*;
 
 
-@Getter
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Table(name = "books")
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
-@Entity
-@Table(name = "books")
+@Getter
+@Setter
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,19 +26,4 @@ public class Book {
     @JoinColumn(name = "genre_id")
     Genre genre;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setAuthor(Author author) {
-        this.author = author;
-    }
-
-    public void setGenre(Genre genre) {
-        this.genre = genre;
-    }
 }

@@ -1,13 +1,12 @@
 package com.example.hw_7.models;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
-import jakarta.persistence.*;
+
+import javax.persistence.*;
 
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -19,11 +18,5 @@ public class Genre {
     Long id;
     String name;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 }
