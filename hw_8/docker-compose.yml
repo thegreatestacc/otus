@@ -1,0 +1,15 @@
+version: "3.7"
+services:
+  application:
+    build: .
+    restart: always
+    ports:
+      - 8080:8080
+    links:
+      - mongodb
+
+  mongodb:
+    image: "mongo:4.4.3"
+    restart: always
+    ports:
+      - 27018:27017
