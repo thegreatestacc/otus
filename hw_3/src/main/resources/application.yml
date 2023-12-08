@@ -11,6 +11,3 @@ test:
   fileNameByLocaleTag:
     ru-RU: questions_ru.csv
     en-US: questions.csv
-  fileNameWithAnswersByLocalTag:
-    ru-RU: answers_ru.csv
-    en-US: answers.csv
