@@ -2,7 +2,9 @@ package com.example.hw_7.models;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import javax.persistence.*;
+
+import jakarta.persistence.*;
+import java.util.List;
 
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -12,6 +14,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Getter
 @Setter
+@NamedEntityGraph(name = "book-entity-graph", attributeNodes = {@NamedAttributeNode("comment")})
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,11 +22,11 @@ public class Book {
     String title;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id")
     Author author;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "genre_id")
     Genre genre;
 
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    List<Comment> comment;
 }

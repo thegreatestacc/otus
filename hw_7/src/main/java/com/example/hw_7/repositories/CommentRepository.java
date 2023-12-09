@@ -13,8 +13,8 @@ public interface CommentRepository extends CrudRepository<Comment, Long> {
 
     Comment save(Comment comment);
 
-    Comment update(Comment comment);
+//    Comment update(Comment comment);
 
-    void delete(long id);
+    void deleteById(Long id);
 
 }

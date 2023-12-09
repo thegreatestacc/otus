@@ -3,7 +3,7 @@ package com.example.hw_7.models;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Getter
 @Setter
@@ -17,6 +17,4 @@ public class Genre {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     String name;
-
-
 }

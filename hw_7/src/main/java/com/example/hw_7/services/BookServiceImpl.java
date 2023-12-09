@@ -4,6 +4,7 @@ import com.example.hw_7.exceptions.NotFoundException;
 import com.example.hw_7.models.Book;
 import com.example.hw_7.repositories.AuthorRepository;
 import com.example.hw_7.repositories.BookRepository;
+import com.example.hw_7.repositories.CommentRepository;
 import com.example.hw_7.repositories.GenreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,8 @@ public class BookServiceImpl implements BookService {
     private final GenreRepository genreRepository;
 
     private final BookRepository bookRepository;
+
+    private final CommentRepository commentRepository;
 
     @Transactional(readOnly = true)
     @Override
@@ -64,7 +67,9 @@ public class BookServiceImpl implements BookService {
                 .orElseThrow(() -> new NotFoundException("Author with id %d not found".formatted(authorId)));
         var genre = genreRepository.findById(genreId)
                 .orElseThrow(() -> new NotFoundException("Genre with id %d not found".formatted(genreId)));
-        var book = new Book(id, title, author, genre);
+        var comments = commentRepository.findAll();
+
+        var book = new Book(id, title, author, genre, comments);
         return bookRepository.save(book);
     }
 }

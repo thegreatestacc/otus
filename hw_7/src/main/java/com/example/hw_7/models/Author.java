@@ -1,9 +1,9 @@
 package com.example.hw_7.models;
 
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import javax.persistence.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,6 +15,6 @@ import javax.persistence.*;
 public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    Long id;
     String fullName;
 }

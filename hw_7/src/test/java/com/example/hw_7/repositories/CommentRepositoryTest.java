@@ -50,7 +50,7 @@ class CommentRepositoryTest {
 
     @Test
     void delete() {
-        commentRepository.delete(1);
+        commentRepository.deleteById(1L);
         Comment comment = null;
         var optionalComment = commentRepository.findById(1);
         if (optionalComment.isPresent()) {
