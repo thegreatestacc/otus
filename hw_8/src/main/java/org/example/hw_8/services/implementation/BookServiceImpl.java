@@ -14,16 +14,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
 public class BookServiceImpl implements BookService {
 
-    private AuthorRepository authorRepository;
+    private final AuthorRepository authorRepository;
 
-    private BookRepository bookRepository;
+    private final BookRepository bookRepository;
 
-    private GenreRepository genreRepository;
+    private final GenreRepository genreRepository;
 
     @Transactional(readOnly = true)
     @Override
@@ -39,22 +40,22 @@ public class BookServiceImpl implements BookService {
 
     @Transactional
     @Override
-    public Book insert(String id, String title, String authorId, String genreId) {
-        return save(id, title, authorId, genreId);
+    public Book insert(String title, String authorId, String genreId) {
+        return save(UUID.randomUUID().toString(), title, authorId, genreId);
     }
 
     @Transactional
     @Override
     public Book update(String id, String title, String authorId, String genreId) {
-        Optional<Book> optionalBook = bookRepository.findById(id);
+        var optionalBook = bookRepository.findById(id);
         optionalBook.orElseThrow(() -> new NotFoundException("Book with id %s already exist!".formatted(id)));
-        Book book = optionalBook.get();
+        var book = optionalBook.get();
         return save(book.getId(), book.getTitle(), book.getAuthor().getId(), book.getGenre().getId());
     }
 
     @Transactional
     @Override
-    public void deleteById(String id) {
+    public void delete(String id) {
         bookRepository.deleteById(id);
     }
 

@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 public class GenreServiceImpl implements GenreService {
 
-    private GenreRepository repository;
+    private final GenreRepository repository;
 
     @Transactional(readOnly = true)
     @Override

@@ -6,6 +6,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class GenreConverter {
     public String genreToString(Genre genre) {
-        return "Id: %d, genre name: %s".formatted(genre.getId(), genre.getName());
+        return "Id: %s, genre name: %s".formatted(genre.getId(), genre.getName());
     }
 }

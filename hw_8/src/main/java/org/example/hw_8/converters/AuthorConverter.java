@@ -6,6 +6,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthorConverter {
     public String authorToString(Author author) {
-        return "Id: %d, full name: &s".formatted(author.getId(), author.getFullName());
+        return "Id: %s, full name: %s".formatted(author.getId(), author.getFullName());
     }
 }

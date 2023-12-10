@@ -6,6 +6,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class CommentConverter {
     public String commentToString(Comment comment) {
-        return "Id: %d, comment: %s".formatted(comment.getId(), comment.getComment());
+        return "Id: %s, comment: %s".formatted(comment.getId(), comment.getComment());
     }
 }
