@@ -1,12 +1,12 @@
 package com.example.hw_7.services;
 
+import com.example.hw_7.exceptions.NotFoundException;
 import com.example.hw_7.models.Comment;
 import com.example.hw_7.repositories.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -23,14 +23,18 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<Comment> findAll() {
+    public Iterable<Comment> findAll() {
         return commentRepository.findAll();
     }
 
     @Transactional
     @Override
     public Comment insert(Comment comment) {
-        return commentRepository.save(comment);
+        Optional<Comment> optionalComment = commentRepository.findById(comment.getId());
+        if (optionalComment.isPresent()) {
+            return commentRepository.save(comment);
+        } else throw new NotFoundException("Comment with id %d does not exist!"
+                .formatted(comment.getId()));
     }
 
     @Transactional
@@ -41,6 +45,7 @@ public class CommentServiceImpl implements CommentService {
         if (optionalComment.isPresent()) {
             Comment updatedComment = optionalComment.get();
             updatedComment.setComment(comment.getComment());
+            commentRepository.save(comment);
             return updatedComment;
         } else {
             throw new RuntimeException("Comment does not exist");

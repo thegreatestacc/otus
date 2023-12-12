@@ -2,6 +2,7 @@ package com.example.hw_7.services;
 
 import com.example.hw_7.exceptions.NotFoundException;
 import com.example.hw_7.models.Book;
+import com.example.hw_7.models.Comment;
 import com.example.hw_7.repositories.AuthorRepository;
 import com.example.hw_7.repositories.BookRepository;
 import com.example.hw_7.repositories.CommentRepository;
@@ -33,20 +34,20 @@ public class BookServiceImpl implements BookService {
     @Transactional(readOnly = true)
     @Override
     public List<Book> findAll() {
-        return bookRepository.findAll();
+        return (List<Book>)bookRepository.findAll();
     }
 
     @Transactional
     @Override
-    public Book insert(String title, long authorId, long genreId, long commentId) {
+    public Book insert(String title, long authorId, long genreId) {
         return save(0, title, authorId, genreId);
     }
 
     @Transactional
     @Override
-    public Book update(long id, String title, long authorId, long genreId, long commentId) {
-        var optional = bookRepository.findById(id);
-        var book = optional.orElseThrow(() -> new NotFoundException(String.format("Book with id %d already exist", id)));
+    public Book update(long id, String title, long authorId, long genreId) {
+        var book = bookRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(String.format("Book with id %d already exist", id)));
         return save(
                 book.getId(),
                 book.getTitle(),
@@ -69,7 +70,7 @@ public class BookServiceImpl implements BookService {
                 .orElseThrow(() -> new NotFoundException("Genre with id %d not found".formatted(genreId)));
         var comments = commentRepository.findAll();
 
-        var book = new Book(id, title, author, genre, comments);
+        var book = new Book(id, title, author, genre, (List<Comment>)comments);
         return bookRepository.save(book);
     }
 }

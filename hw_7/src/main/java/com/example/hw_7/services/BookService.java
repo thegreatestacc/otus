@@ -10,9 +10,9 @@ public interface BookService {
 
     List<Book> findAll();
 
-    Book insert(String title, long authorId, long genreId, long commentId);
+    Book insert(String title, long authorId, long genreId);
 
-    Book update(long id, String title, long authorId, long genreId, long commentId);
+    Book update(long id, String title, long authorId, long genreId);
 
     void deleteById(long id);
 }
