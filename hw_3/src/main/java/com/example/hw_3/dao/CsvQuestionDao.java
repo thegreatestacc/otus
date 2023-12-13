@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,9 +25,9 @@ public class CsvQuestionDao implements QuestionDao {
     @Override
     public List<Question> findAll() {
         List<String> records = new ArrayList<>();
-        File file = readFile(fileNameProvider.getTestFileName());
+        InputStream resourceAsStream = readResource(fileNameProvider.getTestFileName());
         CSVParser parser = getCsvParser();
-        try (Reader reader = new BufferedReader(new FileReader(file));
+        try (Reader reader = new BufferedReader(new InputStreamReader(resourceAsStream));
              CSVReader csvReader = new CSVReaderBuilder(reader)
                      .withCSVParser(parser).build()) {
             csvReader.readAll().forEach(arr -> records.addAll(Arrays.asList(arr)));
@@ -44,9 +43,9 @@ public class CsvQuestionDao implements QuestionDao {
     @Override
     public List<Answer> findAllAnswers() {
         List<String> records = new ArrayList<>();
-        File file = readFile(fileNameProvider.getAnswersFileName());
+        InputStream resourceAsStream = readResource(fileNameProvider.getAnswersFileName());
         CSVParser parser = getCsvParser();
-        try (Reader reader = new BufferedReader(new FileReader(file));
+        try (Reader reader = new BufferedReader(new InputStreamReader(resourceAsStream));
              CSVReader csvReader = new CSVReaderBuilder(reader)
                      .withCSVParser(parser).build()) {
 
@@ -58,15 +57,15 @@ public class CsvQuestionDao implements QuestionDao {
                 .map(record -> new Answer(record, true)).toList());
     }
 
-    private static File readFile(String fileName) {
+    private static InputStream readResource(String fileName) {
         var classLoader = CsvQuestionDao.class.getClassLoader();
-        var resource = classLoader.getResource(fileName);
+        var resource = classLoader.getResourceAsStream(fileName);
         if (resource == null) {
             throw new QuestionReadException("Can not upload file. Resource is null!");
         } else {
             try {
-                return new File(resource.toURI());
-            } catch (URISyntaxException e) {
+                return new BufferedInputStream(resource);
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
