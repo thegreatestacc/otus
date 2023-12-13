@@ -9,6 +9,8 @@ public interface CommentService {
 
     Optional<Comment> findById(String id);
 
+    List<Comment> findCommentsByBookId(String id);
+
     List<Comment> findAll();
 
     Comment insert(Comment comment);

@@ -3,6 +3,7 @@ package org.example.hw_8.models;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @AllArgsConstructor
@@ -17,5 +18,6 @@ public class Comment {
 
     String comment;
 
+    @DBRef(db = "books", lazy = true)
     Book book;
 }

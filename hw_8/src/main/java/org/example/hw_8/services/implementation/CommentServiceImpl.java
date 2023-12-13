@@ -1,7 +1,9 @@
 package org.example.hw_8.services.implementation;
 
 import lombok.RequiredArgsConstructor;
+import org.example.hw_8.exceptions.NotFoundException;
 import org.example.hw_8.models.Comment;
+import org.example.hw_8.repositories.BookRepository;
 import org.example.hw_8.repositories.CommentRepository;
 import org.example.hw_8.services.CommentService;
 import org.springframework.stereotype.Service;
@@ -14,18 +16,30 @@ import java.util.Optional;
 @Service
 public class CommentServiceImpl implements CommentService {
 
-    private final CommentRepository repository;
+    private final CommentRepository commentRepository;
+    private final BookRepository bookRepository;
 
     @Transactional(readOnly = true)
     @Override
     public Optional<Comment> findById(String id) {
-        return repository.findById(id);
+        return commentRepository.findById(id);
+    }
+
+    @Override
+    public List<Comment> findCommentsByBookId(String id) {
+        var optionalBook = bookRepository.findById(id);
+        if (optionalBook.isEmpty()) {
+            throw new NotFoundException("Book with id %s already exist!".formatted(id));
+        } else {
+            var book = optionalBook.get();
+            return commentRepository.findCommentsByBookId(book.getId());
+        }
     }
 
     @Transactional(readOnly = true)
     @Override
     public List<Comment> findAll() {
-        return repository.findAll();
+        return commentRepository.findAll();
     }
 
     @Transactional
@@ -38,7 +52,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Comment update(Comment comment) {
         Comment commentForUpdating = null;
-        Optional<Comment> optionalComment = repository.findById(comment.getId());
+        Optional<Comment> optionalComment = commentRepository.findById(comment.getId());
 
         if (optionalComment.isPresent()) {
             commentForUpdating = optionalComment.get();
@@ -51,12 +65,12 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     @Override
     public void delete(String id) {
-        repository.deleteById(id);
+        commentRepository.deleteById(id);
     }
 
     public Comment save(String text) {
         Comment comment = new Comment();
         comment.setComment(text);
-        return repository.save(comment);
+        return commentRepository.save(comment);
     }
 }

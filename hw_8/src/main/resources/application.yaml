@@ -4,15 +4,12 @@ spring:
       database: application_db
       host: localhost
       port: 27018
+      uri: mongodb://localhost:27018/application_db
 
-  sql:
-    init:
-      mode: always
-      schema-locations: schema.sql
-      data-locations: data.sql
+mongock:
+  enabled: true
+  change-logs-scan-package: org.example.hw_8.config
+  legacy-migration:
+    collection-name: dbchangelog
 
-  datasource:
-    url: jdbc:mongodb://localhost:27018/application_db
-    driver-class-name: 'mongodb.jdbc.MongoDriver'
-    username:
-    password:
+

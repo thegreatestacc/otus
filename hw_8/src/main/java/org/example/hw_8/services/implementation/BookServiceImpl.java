@@ -47,9 +47,8 @@ public class BookServiceImpl implements BookService {
     @Transactional
     @Override
     public Book update(String id, String title, String authorId, String genreId) {
-        var optionalBook = bookRepository.findById(id);
-        optionalBook.orElseThrow(() -> new NotFoundException("Book with id %s already exist!".formatted(id)));
-        var book = optionalBook.get();
+        var book = bookRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Book with id %s already exist!".formatted(id)));
         return save(book.getId(), book.getTitle(), book.getAuthor().getId(), book.getGenre().getId());
     }
 
