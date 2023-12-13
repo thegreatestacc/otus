@@ -14,7 +14,7 @@ import java.util.Optional;
 @Service
 public class AuthorServiceImpl implements AuthorService {
 
-    private AuthorRepository repository;
+    private final AuthorRepository repository;
 
     @Transactional(readOnly = true)
     @Override
