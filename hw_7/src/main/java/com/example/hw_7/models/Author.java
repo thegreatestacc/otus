@@ -1,0 +1,20 @@
+package com.example.hw_7.models;
+
+import jakarta.persistence.*;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Table(name = "authros")
+@Entity
+public class Author {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
+    String fullName;
+}
