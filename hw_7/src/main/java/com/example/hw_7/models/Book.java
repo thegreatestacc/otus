@@ -4,7 +4,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import jakarta.persistence.*;
-import java.util.List;
 
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -14,7 +13,8 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-@NamedEntityGraph(name = "book-entity-graph", attributeNodes = {@NamedAttributeNode("comment")})
+@NamedEntityGraph(name = "book-entity-graph",
+        attributeNodes = {@NamedAttributeNode("author"), @NamedAttributeNode("genre")})
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +26,4 @@ public class Book {
 
     @ManyToOne(fetch = FetchType.LAZY)
     Genre genre;
-
-    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    List<Comment> comment;
 }

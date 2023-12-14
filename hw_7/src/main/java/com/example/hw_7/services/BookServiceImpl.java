@@ -2,7 +2,6 @@ package com.example.hw_7.services;
 
 import com.example.hw_7.exceptions.NotFoundException;
 import com.example.hw_7.models.Book;
-import com.example.hw_7.models.Comment;
 import com.example.hw_7.repositories.AuthorRepository;
 import com.example.hw_7.repositories.BookRepository;
 import com.example.hw_7.repositories.CommentRepository;
@@ -34,7 +33,7 @@ public class BookServiceImpl implements BookService {
     @Transactional(readOnly = true)
     @Override
     public List<Book> findAll() {
-        return (List<Book>)bookRepository.findAll();
+        return bookRepository.findAll();
     }
 
     @Transactional
@@ -70,7 +69,7 @@ public class BookServiceImpl implements BookService {
                 .orElseThrow(() -> new NotFoundException("Genre with id %d not found".formatted(genreId)));
         var comments = commentRepository.findAll();
 
-        var book = new Book(id, title, author, genre, (List<Comment>)comments);
+        var book = new Book(id, title, author, genre);
         return bookRepository.save(book);
     }
 }

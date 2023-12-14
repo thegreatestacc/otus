@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -16,12 +17,11 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Transactional(readOnly = true)
     @Override
-    public Iterable<Author> findAll() {
+    public List<Author> findAll() {
         return authorRepository.findAll();
     }
 
     @Transactional(readOnly = true)
-
     @Override
     public Optional<Author> findById(Long id) {
         return authorRepository.findById(id);
