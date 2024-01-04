@@ -1,9 +1,8 @@
 package org.example.hw_9.models;
 
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import jakarta.persistence.*;
 
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -22,8 +21,10 @@ public class Book {
     String title;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id")
     Author author;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "genre_id")
     Genre genre;
 }
