@@ -1,0 +1,30 @@
+package org.example.hw_9.services.impl;
+
+import lombok.RequiredArgsConstructor;
+import org.example.hw_9.models.Author;
+import org.example.hw_9.repositories.AuthorRepository;
+import org.example.hw_9.services.AuthorService;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+public class AuthorServiceImpl implements AuthorService {
+
+    private final AuthorRepository authorRepository;
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<Author> findAll() {
+        return authorRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Optional<Author> findById(long id) {
+        return authorRepository.findById(id);
+    }
+}
