@@ -13,18 +13,18 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
 
+    services:
+      postgres:
+        image: postgres:11
+        env:
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD:
+          POSTGRES_DB: postgres
+          POSTGRES_SCHEMA: hw_9
+        ports:
+          - 5433:5432
+
     steps:
-      - uses: harmon758/postgresql-action@v1
-        with:
-          postgresql version: '11'
-          postgresql db: postgres
-          postgresql schema: hw_9
-          postgresql user: admin
-          postgresql password:
-
-      - name: Checkout repo
-        uses: actions/checkout@v3
-
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
