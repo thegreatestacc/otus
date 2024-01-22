@@ -21,6 +21,5 @@ create table if not exists hw_9.books
 create table if not exists hw_9.comments
 (
     id      bigint primary key,
-    comment varchar(255),
-    book_id bigint references books (id)
+    comment varchar(255)
 );

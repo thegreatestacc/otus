@@ -39,8 +39,8 @@ public class BookServiceImpl implements BookService {
 
     @Transactional
     @Override
-    public Book insert(String title, long authorId, long genreId) {
-        return save(0, title, authorId, genreId);
+    public Book insert(long id, String title, long authorId, long genreId) {
+        return save(id, title, authorId, genreId);
     }
 
     @Transactional

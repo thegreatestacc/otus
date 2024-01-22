@@ -14,7 +14,7 @@
 <div th:switch="${books}">
     <h2 th:case="null">No books yet!</h2>
     <div th:case="*">
-        <h2>Books</h2>
+        <h2>Welcome to the books page, <span th:text="${userLogin}"></span></h2>
         <table>
             <thead>
             <tr>
@@ -28,13 +28,13 @@
             <tr th:each="book : ${books}">
                 <td th:text="${book.id}"></td>
                 <td th:text="${book.title}"></td>
-                <td><a th:href="@{/edit/{id}(id=${book.id})}">Edit</a></td>
-                <td><a th:href="@{/delete/{id}(id=${book.id})}">Delete</a></td>
+                <td><a th:href="@{|/books/editBook/${book.id}|}">Edit</a></td>
+                <td><a th:href="@{|/books/delete/${book.id}|}">Delete</a></td>
             </tr>
             </tbody>
         </table>
     </div>
-    <p><a href="/add">Add a new book</a></p>
+    <p><a href="/books/create">Add a new book</a></p>
 </div>
 </body>
 

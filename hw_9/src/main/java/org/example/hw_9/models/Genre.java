@@ -1,9 +1,8 @@
 package org.example.hw_9.models;
 
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import jakarta.persistence.*;
 
 @Getter
 @Setter
@@ -14,7 +13,7 @@ import jakarta.persistence.*;
 @Entity
 public class Genre {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
     String name;
 }

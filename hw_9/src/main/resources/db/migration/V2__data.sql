@@ -13,7 +13,7 @@ values (1, 'BookTitle_1', 1, 1),
        (2, 'BookTitle_2', 2, 2),
        (3, 'BookTitle_3', 3, 3);
 
-insert into hw_9.comments (id, comment, book_id)
-values (1, 'comment_1', 3),
-       (2, 'comment_2', 2),
-       (3, 'comment_3', 1);
+insert into hw_9.comments (id, comment)
+values (1, 'comment_1'),
+       (2, 'comment_2'),
+       (3, 'comment_3');
