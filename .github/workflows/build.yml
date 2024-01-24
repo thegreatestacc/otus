@@ -10,15 +10,6 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
 
-    services:
-      postgres:
-        image: postgres
-        env:
-          POSTGRES_PASSWORD=admin
-          POSTGRES_SCHEMA=hw_9
-        ports:
-          - "5433:5432"
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
