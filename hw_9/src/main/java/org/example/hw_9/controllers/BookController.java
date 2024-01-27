@@ -3,11 +3,11 @@ package org.example.hw_9.controllers;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.hw_9.dto.BookCreateDto;
+import org.example.hw_9.dto.BookUpdateDto;
 import org.example.hw_9.models.Book;
 import org.example.hw_9.services.BookService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,9 +21,7 @@ public class BookController {
 
 
     @GetMapping("/all")
-    public String showAllBooks(@RequestParam(required = false) String login,
-                               @RequestParam(required = false) String password,
-                               Model model) {
+    public String showAllBooks(@RequestParam(required = false) String login, Model model) {
         List<Book> books = bookService.findAll();
         model.addAttribute("userLogin", login);
         model.addAttribute("books", books);
@@ -37,29 +35,21 @@ public class BookController {
     }
 
     @PostMapping("/createBook")
-    public String addBook(@ModelAttribute BookCreateDto bookCreateDto) {
-        bookService.insert(
-                bookCreateDto.getBookId(),
-                bookCreateDto.getTitle(),
-                bookCreateDto.getAuthorId(),
-                bookCreateDto.getGenreId());
+    public String addBook(@ModelAttribute @Valid BookCreateDto bookCreateDto) {
+        bookService.insert(bookCreateDto);
         return "redirect:/books/all";
     }
 
     @GetMapping("/editBook/{id}")
     public String getEditBookPage(Model model, @PathVariable Long id) {
-        Book bookToEdit = bookService.findById(id).orElseThrow(RuntimeException::new);
+        Book bookToEdit = bookService.findById(id);
         model.addAttribute("bookToEdit", bookToEdit);
         return "edit_book_page";
     }
 
     @PostMapping("/editBook")
-    public String editBook(@ModelAttribute BookCreateDto bookCreateDto) {
-        bookService.update(
-                bookCreateDto.getBookId(),
-                bookCreateDto.getTitle(),
-                bookCreateDto.getAuthorId(),
-                bookCreateDto.getGenreId());
+    public String editBook(@ModelAttribute @Valid BookUpdateDto bookUpdateDto) {
+        bookService.update(bookUpdateDto);
         return "redirect:/books/all";
     }
 

@@ -1,8 +1,13 @@
 package org.example.hw_9.services.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.example.hw_9.dto.BookCreateDto;
+import org.example.hw_9.dto.BookDto;
+import org.example.hw_9.dto.BookUpdateDto;
 import org.example.hw_9.exceptions.NotFoundException;
+import org.example.hw_9.models.Author;
 import org.example.hw_9.models.Book;
+import org.example.hw_9.models.Genre;
 import org.example.hw_9.repositories.AuthorRepository;
 import org.example.hw_9.repositories.BookRepository;
 import org.example.hw_9.repositories.GenreRepository;
@@ -11,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,8 +31,9 @@ public class BookServiceImpl implements BookService {
 
     @Transactional(readOnly = true)
     @Override
-    public Optional<Book> findById(long id) {
-        return bookRepository.findById(id);
+    public Book findById(long id) {
+        return bookRepository.findById(id)
+                .orElseThrow(RuntimeException::new);
     }
 
     @Transactional(readOnly = true)
@@ -39,19 +44,16 @@ public class BookServiceImpl implements BookService {
 
     @Transactional
     @Override
-    public Book insert(long id, String title, long authorId, long genreId) {
-        return save(id, title, authorId, genreId);
+    public Book insert(BookCreateDto bookCreateDto) {
+        return save(bookCreateDto);
     }
 
     @Transactional
     @Override
-    public Book update(long id, String title, long authorId, long genreId) {
-        var book = bookRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(BOOK_NOT_FOUND_MESSAGE.formatted(id)));
-        return save(book.getId(),
-                book.getTitle(),
-                book.getAuthor().getId(),
-                book.getGenre().getId());
+    public Book update(BookUpdateDto bookUpdateDto) {
+        if (bookRepository.findById(bookUpdateDto.getBookId()).isEmpty())
+            throw new NotFoundException(BOOK_NOT_FOUND_MESSAGE.formatted(bookUpdateDto.getBookId()));
+        return save(bookUpdateDto);
     }
 
     @Transactional
@@ -61,12 +63,16 @@ public class BookServiceImpl implements BookService {
     }
 
     @Transactional(readOnly = true)
-    public Book save(long id, String title, long authorId, long genreId) {
-        var author = authorRepository.findById(authorId)
-                .orElseThrow(() -> new NotFoundException(AUTHOR_NOT_FOUND_MESSAGE.formatted(authorId)));
-        var genre = genreRepository.findById(genreId)
-                .orElseThrow(() -> new NotFoundException(GENRE_NOT_FOUND_MESSAGE.formatted(genreId)));
-        var book = new Book(id, title, author, genre);
-        return bookRepository.save(book);
+    public Book save(BookDto bookDto) {
+        return bookRepository.save(convertDtoToBook(bookDto));
+    }
+
+    @Transactional
+    public Book convertDtoToBook(BookDto bookDto) {
+        Author author = authorRepository.findById(bookDto.getAuthorId())
+                .orElseThrow(() -> new NotFoundException(AUTHOR_NOT_FOUND_MESSAGE.formatted(bookDto.getAuthorId())));
+        Genre genre = genreRepository.findById(bookDto.getGenreId())
+                .orElseThrow(() -> new NotFoundException(GENRE_NOT_FOUND_MESSAGE.formatted(bookDto.getGenreId())));
+        return new Book(bookDto.getBookId(), bookDto.getTitle(), author, genre);
     }
 }

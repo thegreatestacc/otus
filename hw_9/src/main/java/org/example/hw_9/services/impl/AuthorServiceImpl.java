@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +23,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Transactional(readOnly = true)
     @Override
-    public Optional<Author> findById(long id) {
-        return authorRepository.findById(id);
+    public Author findById(long id) {
+        return authorRepository.findById(id).orElseThrow(RuntimeException::new);
     }
 }
