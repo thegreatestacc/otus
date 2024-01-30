@@ -33,7 +33,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public Book findById(long id) {
         return bookRepository.findById(id)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new NotFoundException(BOOK_NOT_FOUND_MESSAGE.formatted(id)));
     }
 
     @Transactional(readOnly = true)
@@ -62,8 +62,8 @@ public class BookServiceImpl implements BookService {
         bookRepository.deleteById(id);
     }
 
-    @Transactional(readOnly = true)
-    public Book save(BookDto bookDto) {
+    @Transactional
+    protected Book save(BookDto bookDto) {
         return bookRepository.save(convertDtoToBook(bookDto));
     }
 
