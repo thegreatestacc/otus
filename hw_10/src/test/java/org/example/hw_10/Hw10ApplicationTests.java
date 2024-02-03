@@ -1,17 +1,12 @@
 package org.example.hw_10;
 
-import io.restassured.RestAssured;
 import org.example.hw_10.controllers.BookController;
 import org.example.hw_10.dto.BookCreateDto;
-import org.example.hw_10.dto.BookDto;
 import org.example.hw_10.models.Book;
 import org.example.hw_10.repositories.BookRepository;
-import org.example.hw_10.services.BookService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
