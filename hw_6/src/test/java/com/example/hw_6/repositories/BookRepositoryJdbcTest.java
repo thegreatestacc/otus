@@ -6,9 +6,7 @@ import com.example.hw_6.models.Genre;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.Optional;
@@ -19,9 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestPropertySource("classpath:application-test.yml")
 class BookRepositoryJdbcTest {
 
-    @Autowired
-    NamedParameterJdbcTemplate jdbcTemplate;
-
     @Mock
     BookRepositoryJdbc bookRepositoryJdbc;
 
@@ -31,7 +26,6 @@ class BookRepositoryJdbcTest {
 
     @BeforeEach
     void setUp() {
-        bookRepositoryJdbc = new BookRepositoryJdbc(jdbcTemplate);
         author = new Author(7L, "NEW_AUTHOR");
         genre = new Genre(7L, "NEW_NAME");
         book = new Book(7L, "new_title", author, genre);
