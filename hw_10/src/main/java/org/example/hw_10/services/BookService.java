@@ -1,20 +1,20 @@
 package org.example.hw_10.services;
 
 
-import org.example.hw_10.dto.BookCreateDto;
-import org.example.hw_10.dto.BookUpdateDto;
-import org.example.hw_10.models.Book;
+import org.example.hw_10.dto.book.BookCreateDto;
+import org.example.hw_10.dto.book.BookDto;
+import org.example.hw_10.dto.book.BookUpdateDto;
 
 import java.util.List;
 
 public interface BookService {
-    Book findById(long id);
+    BookDto findById(long id);
 
-    List<Book> findAll();
+    List<BookDto> findAll();
 
-    Book insert(BookCreateDto bookCreateDto);
+    BookDto create(BookCreateDto bookCreateDto);
 
-    Book update(BookUpdateDto bookUpdateDto);
+    BookDto update(BookUpdateDto bookUpdateDto);
 
     void deleteById(long id);
 }

@@ -1,20 +1,20 @@
 package org.example.hw_10.services;
 
-
-import org.example.hw_10.models.Comment;
+import org.example.hw_10.dto.comment.CommentCreateDto;
+import org.example.hw_10.dto.comment.CommentDto;
+import org.example.hw_10.dto.comment.CommentUpdateDto;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface CommentService {
 
-    Optional<Comment> findById(long id);
+    CommentDto findById(long id);
 
-    List<Comment> findAll();
+    List<CommentDto> findAll();
 
-    Comment insert(Comment comment);
+    CommentDto create(CommentCreateDto commentCreateDto);
 
-    Comment update(Comment comment);
+    CommentDto update(CommentUpdateDto commentUpdateDto);
 
     void deleteById(long id);
 }

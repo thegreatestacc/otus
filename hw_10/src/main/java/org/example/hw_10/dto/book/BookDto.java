@@ -1,13 +1,9 @@
-package org.example.hw_10.dto;
+package org.example.hw_10.dto.book;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.example.hw_10.models.Book;
 
 @Data
 @AllArgsConstructor

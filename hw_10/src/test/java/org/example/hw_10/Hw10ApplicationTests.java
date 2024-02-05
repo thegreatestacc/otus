@@ -1,8 +1,7 @@
 package org.example.hw_10;
 
 import org.example.hw_10.controllers.BookController;
-import org.example.hw_10.dto.BookCreateDto;
-import org.example.hw_10.models.Book;
+import org.example.hw_10.dto.book.BookCreateDto;
 import org.example.hw_10.repositories.BookRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.util.List;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -39,9 +38,9 @@ class Hw10ApplicationTests {
 
     @Test
     void shouldReturnOkStatus_whenGetAllBooksRequest() {
-        List<Book> actual = bookController.getAllBooks();
-        assertEquals(3, actual.size());
-        assertEquals("BookTitle_1", actual.get(0).getTitle());
+        var actual = bookController.getAllBooks();
+        assertEquals(3, Objects.requireNonNull(actual.getBody()).size());
+        assertEquals("BookTitle_1", actual.getBody().get(0).getTitle());
     }
 
     @Test
@@ -54,11 +53,11 @@ class Hw10ApplicationTests {
 
         bookRepository.deleteAll();
 
-        Book actual = bookController.addBook(dto);
-        List<Book> all = bookController.getAllBooks();
+        var actual = bookController.addBook(dto);
+        var all = bookController.getAllBooks();
 
-        assertEquals(1, all.size());
-        assertEquals("Title_10", actual.getTitle());
+        assertEquals(1, Objects.requireNonNull(all.getBody()).size());
+        assertEquals("Title_10", Objects.requireNonNull(actual.getBody()).getTitle());
     }
 
 }
