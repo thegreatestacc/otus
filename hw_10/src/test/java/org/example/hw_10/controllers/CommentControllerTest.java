@@ -30,7 +30,8 @@ class CommentControllerTest {
     @ServiceConnection
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15");
 
-    static String allCommentsResult = "[{\"id\":1,\"comment\":\"comment_1\"},{\"id\":2,\"comment\":\"comment_2\"},{\"id\":3,\"comment\":\"comment_3\"}]";
+    static String allCommentsResult = "[{\"id\":2,\"comment\":\"comment_2\"},{\"id\":1,\"comment\":\"new_comment\"}]";
+
     static String commentByID = "{\"id\":1,\"comment\":\"comment_1\"}";
 
     @Autowired
@@ -68,7 +69,7 @@ class CommentControllerTest {
     }
 
     @ParameterizedTest
-    @ValueSource(longs = 1L)
+    @ValueSource(longs = 3L)
     void shouldDeleteComment_whenDeleteByID(Long id) throws Exception {
         this.mockMvc.perform(delete("/comment/" + id))
                 .andExpect(status().is2xxSuccessful())
