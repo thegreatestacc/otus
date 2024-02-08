@@ -45,7 +45,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     @Override
     public CommentDto create(CommentCreateDto commentCreateDto) {
-        Comment savedComment = save(commentCreateDto);
+        Comment savedComment = saveCreate(commentCreateDto);
         return commentMapper.commentToDto(savedComment);
     }
 
@@ -54,7 +54,7 @@ public class CommentServiceImpl implements CommentService {
     public CommentDto update(CommentUpdateDto commentUpdateDto) {
         if (commentRepository.findById(commentUpdateDto.getId()).isEmpty())
             throw new NotFoundException(COMMENT_NOT_FOND_MESSAGE.formatted(commentUpdateDto.getId()));
-        Comment savedComment = save(commentUpdateDto);
+        Comment savedComment = saveUpdate(commentUpdateDto);
         return commentMapper.commentToDto(savedComment);
     }
 
@@ -64,7 +64,11 @@ public class CommentServiceImpl implements CommentService {
         commentRepository.deleteById(id);
     }
 
-    protected Comment save(CommentDto commentDto) {
-        return commentRepository.save(commentMapper.dtoToComment(commentDto));
+    protected Comment saveUpdate(CommentUpdateDto dto) {
+        return commentRepository.save(commentMapper.updateDtoToComment(dto));
+    }
+
+    protected Comment saveCreate(CommentCreateDto dto) {
+        return commentRepository.save(commentMapper.createDtoToComment(dto));
     }
 }

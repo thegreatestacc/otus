@@ -45,7 +45,7 @@ public class BookServiceImpl implements BookService {
     @Transactional
     @Override
     public BookDto create(BookCreateDto bookCreateDto) {
-        Book savedBook = save(bookCreateDto);
+        Book savedBook = saveCreate(bookCreateDto);
         return bookMapper.convertBookToDto(savedBook);
     }
 
@@ -54,7 +54,7 @@ public class BookServiceImpl implements BookService {
     public BookDto update(BookUpdateDto bookUpdateDto) {
         if (bookRepository.findById(bookUpdateDto.getBookId()).isEmpty())
             throw new NotFoundException(BOOK_NOT_FOUND_MESSAGE.formatted(bookUpdateDto.getBookId()));
-        Book savedBook = save(bookUpdateDto);
+        Book savedBook = saveUpdate(bookUpdateDto);
         return bookMapper.convertBookToDto(savedBook);
     }
 
@@ -65,7 +65,12 @@ public class BookServiceImpl implements BookService {
     }
 
     @Transactional
-    protected Book save(BookDto bookDto) {
-        return bookRepository.save(bookMapper.convertDtoToBook(bookDto));
+    protected Book saveCreate(BookCreateDto dto) {
+        return bookRepository.save(bookMapper.convertCreateDtoToBook(dto));
+    }
+
+    @Transactional
+    protected Book saveUpdate(BookUpdateDto dto) {
+        return bookRepository.save(bookMapper.convertUpdateDtoToBook(dto));
     }
 }
