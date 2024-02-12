@@ -41,5 +41,6 @@
         <module>2023-10-otus-spring-solovyov</module>
 <!--        <module>hw_7</module>-->
         <module>hw_9</module>
+        <module>hw_10</module>
     </modules>
 </project>
