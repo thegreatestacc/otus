@@ -22,12 +22,16 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Testcontainers
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest
 class CommentControllerTest {
 
     @Container
     @ServiceConnection
     static MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:6.0.7"));
+
+    static {
+        mongoDBContainer.start();
+    }
 
     @Autowired
     private CommentController commentController;
