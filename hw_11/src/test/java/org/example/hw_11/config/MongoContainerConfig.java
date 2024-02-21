@@ -12,7 +12,7 @@ public abstract class MongoContainerConfig {
     static {
         mongo = new GenericContainer("mongo:6.0.7")
                 .withReuse(true)
-                .withExposedPorts(27071)
+                .withExposedPorts(27017)
                 .waitingFor(Wait.forLogMessage(".*Waiting for connections.*\\n", 1))
                 .withEnv("MONGO_INITDB_ROOT_USERNAME", "admin")
                 .withEnv("MONGO_INITDB_ROOT_PASSWORD", "pwd");
