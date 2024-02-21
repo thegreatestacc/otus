@@ -7,15 +7,25 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.testcontainers.containers.MongoDBContainer;
+import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.DEFINED_PORT;
 
 @Testcontainers
-@SpringBootTest
+@SpringBootTest(webEnvironment = DEFINED_PORT)
 class GenreControllerTest {
+
+    @Container
+    public static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:6.0.7");
+
+    static {
+        mongoDBContainer.start();
+    }
 
     @Autowired
     private GenreController genreController;
