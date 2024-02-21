@@ -1,5 +1,6 @@
 package org.example.hw_11.controllers;
 
+import org.example.hw_11.config.MongoContainerConfig;
 import org.example.hw_11.dto.comment.CommentDto;
 import org.example.hw_11.dto.comment.CommentUpdateDto;
 import org.example.hw_11.models.Book;
@@ -11,13 +12,15 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Testcontainers
 @SpringBootTest
-class CommentControllerTest {
+class CommentControllerTest extends MongoContainerConfig {
 
     @Autowired
     private CommentController commentController;

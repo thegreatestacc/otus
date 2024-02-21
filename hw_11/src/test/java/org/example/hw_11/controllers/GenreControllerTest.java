@@ -1,5 +1,6 @@
 package org.example.hw_11.controllers;
 
+import org.example.hw_11.config.MongoContainerConfig;
 import org.example.hw_11.dto.genre.GenreDto;
 import org.example.hw_11.models.Genre;
 import org.example.hw_11.repositories.GenreRepository;
@@ -7,13 +8,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Testcontainers
 @SpringBootTest
-class GenreControllerTest {
+class GenreControllerTest extends MongoContainerConfig {
 
     @Autowired
     private GenreController genreController;

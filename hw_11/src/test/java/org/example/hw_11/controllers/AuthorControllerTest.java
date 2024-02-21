@@ -1,5 +1,6 @@
 package org.example.hw_11.controllers;
 
+import org.example.hw_11.config.MongoContainerConfig;
 import org.example.hw_11.dto.author.AuthorDto;
 import org.example.hw_11.models.Author;
 import org.example.hw_11.repositories.AuthorRepository;
@@ -8,14 +9,16 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
+@Testcontainers
 @SpringBootTest
-class AuthorControllerTest {
+class AuthorControllerTest extends MongoContainerConfig {
 
     @Autowired
     AuthorController authorController;
