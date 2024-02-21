@@ -1,6 +1,5 @@
 package org.example.hw_11.controllers;
 
-import org.example.hw_11.config.MongoContainerConfig;
 import org.example.hw_11.dto.book.BookCreateDto;
 import org.example.hw_11.dto.book.BookDto;
 import org.example.hw_11.dto.book.BookUpdateDto;
@@ -15,7 +14,11 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.testcontainers.containers.MongoDBContainer;
+import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
 import java.util.List;
 
@@ -23,7 +26,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Testcontainers
 @SpringBootTest
-class BookControllerTest extends MongoContainerConfig {
+class BookControllerTest {
+
+    @Container
+    @ServiceConnection
+    static MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:6.0.7"));
 
     @Autowired
     private BookController bookController;

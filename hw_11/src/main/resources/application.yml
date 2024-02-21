@@ -1,7 +1,7 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://localhost:27017/mongo_hw_11
+      uri: mongodb://localhost:27071/mongo_hw_11
       username: admin
       password:
       database: hw_11
