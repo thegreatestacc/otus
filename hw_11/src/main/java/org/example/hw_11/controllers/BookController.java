@@ -29,12 +29,12 @@ public class BookController {
     }
 
     @PostMapping("/create")
-    public BookDto addBook(@RequestBody @Valid BookCreateDto bookCreateDto) {
+    public Mono<BookDto> addBook(@RequestBody @Valid BookCreateDto bookCreateDto) {
         return bookService.create(bookCreateDto);
     }
 
     @PatchMapping("/update")
-    public BookDto updateBook(@RequestBody @Valid BookUpdateDto bookUpdateDto) {
+    public Mono<BookDto> updateBook(@RequestBody @Valid BookUpdateDto bookUpdateDto) {
         return bookService.update(bookUpdateDto);
     }
 

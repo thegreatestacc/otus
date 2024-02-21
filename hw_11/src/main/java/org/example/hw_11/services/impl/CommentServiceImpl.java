@@ -26,11 +26,11 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional(readOnly = true)
     @Override
-    public CommentDto findById(long id) {
-        return commentRepository.findById(id)
+    public Mono<CommentDto> findById(long id) {
+        return Mono.just(commentRepository.findById(id)
                 .map(commentMapper::commentToDto)
                 .blockOptional()
-                .orElseThrow(() -> new NotFoundException(COMMENT_NOT_FOND_MESSAGE.formatted(id)));
+                .orElseThrow(() -> new NotFoundException(COMMENT_NOT_FOND_MESSAGE.formatted(id))));
     }
 
     @Transactional(readOnly = true)
@@ -42,22 +42,22 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional
     @Override
-    public CommentDto create(CommentCreateDto commentCreateDto) {
+    public Mono<CommentDto> create(CommentCreateDto commentCreateDto) {
         Comment savedComment = saveCreate(commentCreateDto)
                 .blockOptional()
                 .orElseThrow(() -> new NotFoundException(COMMENT_NOT_FOND_MESSAGE.formatted(commentCreateDto.getId())));
-        return commentMapper.commentToDto(savedComment);
+        return Mono.just(commentMapper.commentToDto(savedComment));
     }
 
     @Transactional
     @Override
-    public CommentDto update(CommentUpdateDto commentUpdateDto) {
+    public Mono<CommentDto> update(CommentUpdateDto commentUpdateDto) {
         if (commentRepository.findById(commentUpdateDto.getId()).blockOptional().isEmpty())
             throw new NotFoundException(COMMENT_NOT_FOND_MESSAGE.formatted(commentUpdateDto.getId()));
         Comment savedComment = saveUpdate(commentUpdateDto)
                 .blockOptional()
                 .orElseThrow(() -> new NotFoundException(COMMENT_NOT_FOND_MESSAGE.formatted(commentUpdateDto.getId())));
-        return commentMapper.commentToDto(savedComment);
+        return Mono.just(commentMapper.commentToDto(savedComment));
     }
 
     @Transactional

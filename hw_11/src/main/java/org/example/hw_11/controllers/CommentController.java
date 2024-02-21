@@ -9,6 +9,7 @@ import org.example.hw_11.services.CommentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/comment")
@@ -23,17 +24,17 @@ public class CommentController {
     }
 
     @GetMapping("/{id}")
-    public CommentDto getCommentById(@PathVariable Long id) {
+    public Mono<CommentDto> getCommentById(@PathVariable Long id) {
         return commentService.findById(id);
     }
 
     @PostMapping("/create")
-    public CommentDto addComment(@RequestBody @Valid CommentCreateDto commentCreateDto) {
+    public Mono<CommentDto> addComment(@RequestBody @Valid CommentCreateDto commentCreateDto) {
         return commentService.create(commentCreateDto);
     }
 
     @PatchMapping("/update")
-    public CommentDto updateComment(@RequestBody @Valid CommentUpdateDto commentUpdateDto) {
+    public Mono<CommentDto> updateComment(@RequestBody @Valid CommentUpdateDto commentUpdateDto) {
         return commentService.update(commentUpdateDto);
     }
 

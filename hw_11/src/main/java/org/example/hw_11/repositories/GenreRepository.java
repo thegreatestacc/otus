@@ -1,10 +1,10 @@
 package org.example.hw_11.repositories;
 
 import org.example.hw_11.models.Genre;
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import reactor.core.publisher.Mono;
 
-public interface GenreRepository extends ReactiveCrudRepository<Genre, Long> {
+public interface GenreRepository extends ReactiveMongoRepository<Genre, Long> {
 
     Mono<Genre> findById(long id);
 }

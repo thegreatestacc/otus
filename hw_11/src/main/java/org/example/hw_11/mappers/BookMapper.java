@@ -4,33 +4,19 @@ import lombok.RequiredArgsConstructor;
 import org.example.hw_11.dto.book.BookCreateDto;
 import org.example.hw_11.dto.book.BookDto;
 import org.example.hw_11.dto.book.BookUpdateDto;
-import org.example.hw_11.exceptions.NotFoundException;
 import org.example.hw_11.models.Author;
 import org.example.hw_11.models.Book;
 import org.example.hw_11.models.Genre;
-import org.example.hw_11.repositories.AuthorRepository;
-import org.example.hw_11.repositories.GenreRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
 public class BookMapper {
-    private final static String AUTHOR_NOT_FOUND_MESSAGE = "Author with id %d not found!";
-    private final static String GENRE_NOT_FOUND_MESSAGE = "Genre with id %d not found!";
-
-    private final AuthorRepository authorRepository;
-    private final GenreRepository genreRepository;
 
     @Transactional
     public Book convertDtoToBook(BookDto dto) {
-        Author author = authorRepository.findById(dto.getAuthorId())
-                .blockOptional()
-                .orElseThrow(() -> new NotFoundException(AUTHOR_NOT_FOUND_MESSAGE.formatted(dto.getAuthorId())));
-        Genre genre = genreRepository.findById(dto.getGenreId())
-                .blockOptional()
-                .orElseThrow(() -> new NotFoundException(GENRE_NOT_FOUND_MESSAGE.formatted(dto.getGenreId())));
-        return new Book(dto.getBookId(), dto.getTitle(), author, genre);
+        return new Book(dto.getBookId(), dto.getTitle(), new Author(), new Genre());
     }
 
     @Transactional
@@ -45,13 +31,7 @@ public class BookMapper {
 
     @Transactional
     public Book convertUpdateDtoToBook(BookUpdateDto dto) {
-        Author author = authorRepository.findById(dto.getAuthorId())
-                .blockOptional()
-                .orElseThrow(() -> new NotFoundException(AUTHOR_NOT_FOUND_MESSAGE.formatted(dto.getAuthorId())));
-        Genre genre = genreRepository.findById(dto.getGenreId())
-                .blockOptional()
-                .orElseThrow(() -> new NotFoundException(GENRE_NOT_FOUND_MESSAGE.formatted(dto.getGenreId())));
-        return new Book(dto.getBookId(), dto.getTitle(), author, genre);
+        return new Book(dto.getBookId(), dto.getTitle(), new Author(), new Genre());
     }
 
     @Transactional
@@ -66,13 +46,7 @@ public class BookMapper {
 
     @Transactional
     public Book convertCreateDtoToBook(BookCreateDto dto) {
-        Author author = authorRepository.findById(dto.getAuthorId())
-                .blockOptional()
-                .orElseThrow(() -> new NotFoundException(AUTHOR_NOT_FOUND_MESSAGE.formatted(dto.getAuthorId())));
-        Genre genre = genreRepository.findById(dto.getGenreId())
-                .blockOptional()
-                .orElseThrow(() -> new NotFoundException(GENRE_NOT_FOUND_MESSAGE.formatted(dto.getGenreId())));
-        return new Book(dto.getBookId(), dto.getTitle(), author, genre);
+        return new Book(dto.getBookId(), dto.getTitle(), new Author(), new Genre());
     }
 
     public BookCreateDto convertBookToBookCreateDto(Book book) {

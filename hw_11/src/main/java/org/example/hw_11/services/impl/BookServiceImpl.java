@@ -40,18 +40,18 @@ public class BookServiceImpl implements BookService {
 
     @Transactional
     @Override
-    public BookDto create(BookCreateDto bookCreateDto) {
+    public Mono<BookDto> create(BookCreateDto bookCreateDto) {
         Book savedBook = saveCreate(bookCreateDto);
-        return bookMapper.convertBookToDto(savedBook);
+        return Mono.just(bookMapper.convertBookToDto(savedBook));
     }
 
     @Transactional
     @Override
-    public BookDto update(BookUpdateDto bookUpdateDto) {
+    public Mono<BookDto> update(BookUpdateDto bookUpdateDto) {
         if (bookRepository.findById(bookUpdateDto.getBookId()).blockOptional().isEmpty())
             throw new NotFoundException(BOOK_NOT_FOUND_MESSAGE.formatted(bookUpdateDto.getBookId()));
         Book savedBook = saveUpdate(bookUpdateDto);
-        return bookMapper.convertBookToDto(savedBook);
+        return Mono.just(bookMapper.convertBookToDto(savedBook));
     }
 
     @Transactional

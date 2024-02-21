@@ -4,16 +4,17 @@ import org.example.hw_11.dto.comment.CommentCreateDto;
 import org.example.hw_11.dto.comment.CommentDto;
 import org.example.hw_11.dto.comment.CommentUpdateDto;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface CommentService {
 
-    CommentDto findById(long id);
+    Mono<CommentDto> findById(long id);
 
     Flux<CommentDto> findAll();
 
-    CommentDto create(CommentCreateDto commentCreateDto);
+    Mono<CommentDto> create(CommentCreateDto commentCreateDto);
 
-    CommentDto update(CommentUpdateDto commentUpdateDto);
+    Mono<CommentDto> update(CommentUpdateDto commentUpdateDto);
 
     void deleteById(long id);
 }

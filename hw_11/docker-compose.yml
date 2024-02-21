@@ -1,12 +1,11 @@
 version: '3'
 
 services:
-  postgres:
-    image: 'postgres:15'
-    container_name: 'java-postgres'
+  mongo:
+    image: 'mongo:6.0.7'
+    container_name: 'mongo-hw-11'
     ports:
-      - 5433:5432
+      - 27071:27017
     environment:
-      - 'POSTGRES_USER=admin'
-      - 'POSTGRES_HOST_AUTH_METHOD=trust'
-      - 'POSTGRES_DB=postgres'
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: pwd

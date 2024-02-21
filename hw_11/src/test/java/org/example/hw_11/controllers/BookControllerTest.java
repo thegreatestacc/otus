@@ -3,60 +3,56 @@ package org.example.hw_11.controllers;
 import org.example.hw_11.dto.book.BookCreateDto;
 import org.example.hw_11.dto.book.BookDto;
 import org.example.hw_11.dto.book.BookUpdateDto;
+import org.example.hw_11.models.Author;
+import org.example.hw_11.models.Book;
+import org.example.hw_11.models.Genre;
 import org.example.hw_11.repositories.BookRepository;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.containers.PostgreSQLR2DBCDatabaseContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@Testcontainers
 @SpringBootTest
 class BookControllerTest {
-
-    @Container
-    @ServiceConnection
-    static PostgreSQLR2DBCDatabaseContainer postgres = new PostgreSQLR2DBCDatabaseContainer(
-            new PostgreSQLContainer<>("postgres:latest"));
 
     @Autowired
     private BookController bookController;
 
     @Autowired
-    private BookRepository bookRepository;
+    private BookRepository repository;
 
-    @Test
-    void contextLoads() {
-        assertThat(bookController).isNotNull();
+    @BeforeEach
+    void setUp() {
+        repository.save(new Book(1L, "Book_Title_1", new Author(1L, "Author_Name_1"), new Genre(1L, "Genre_Name_1"))).blockOptional();
+        repository.save(new Book(2L, "Book_Title_2", new Author(2L, "Author_Name_2"), new Genre(2L, "Genre_Name_2"))).blockOptional();
+        repository.save(new Book(3L, "Book_Title_3", new Author(3L, "Author_Name_3"), new Genre(3L, "Genre_Name_3"))).blockOptional();
+    }
+
+    @AfterEach
+    void tearDown() {
+        repository.deleteAll().blockOptional();
     }
 
     @Test
     void shouldReturnOkStatus_whenGetAllBooksRequest() {
-        Flux<BookDto> bookDtoFlux = bookController.getAllBooks();
-        Mono<List<BookDto>> list = bookDtoFlux.collectList();
-        List<BookDto> actual = list.blockOptional().get();
-        assertEquals(2, actual.size());
-        assertEquals("BookTitle_2", actual.get(0).getTitle());
-    }
+        List<BookDto> actual = bookController.getAllBooks().collectList().blockOptional().get();
 
+        assertEquals(3, actual.size());
+        assertEquals("Book_Title_1", actual.get(0).getTitle());
+    }
 
     @ParameterizedTest
     @ValueSource(longs = 1)
     void shouldReturnBook_whenGetBookByID(Long id) {
-        Mono<BookDto> actual = bookController.getBookById(id);
-        assertEquals("BookTitle_1", actual.blockOptional().get().getTitle());
+        BookDto actual = bookController.getBookById(id).blockOptional().get();
+        assertEquals("Book_Title_1", actual.getTitle());
     }
 
     @Test
@@ -67,9 +63,9 @@ class BookControllerTest {
         dto.setAuthorId(1L);
         dto.setGenreId(2L);
 
-        BookDto updatedBook = bookController.updateBook(dto);
+        BookDto actual = bookController.updateBook(dto).blockOptional().get();
 
-        assertEquals("new_title", updatedBook.getTitle());
+        assertEquals("new_title", actual.getTitle());
     }
 
     @Test
@@ -80,12 +76,12 @@ class BookControllerTest {
         dto.setAuthorId(1L);
         dto.setGenreId(2L);
 
-        bookRepository.deleteAll();
+        BookDto savedBook = bookController.addBook(dto).blockOptional().get();
+        BookDto actual = bookController.getBookById(savedBook.getBookId()).blockOptional().get();
 
-        var actual = bookController.addBook(dto);
         var all = bookController.getAllBooks().collectList().blockOptional().get();
 
-        assertEquals(1, all.size());
+        assertEquals(4, all.size());
         assertEquals("Title_10", actual.getTitle());
     }
 
@@ -95,7 +91,7 @@ class BookControllerTest {
         bookController.deleteById(id);
         List<BookDto> actual = bookController.getAllBooks().collectList().blockOptional().get();
 
-        assertEquals(2, actual.size());
+        assertEquals(3, actual.size());
     }
 
 }

@@ -11,9 +11,9 @@ public interface BookService {
 
     Flux<BookDto> findAll();
 
-    BookDto create(BookCreateDto bookCreateDto);
+    Mono<BookDto> create(BookCreateDto bookCreateDto);
 
-    BookDto update(BookUpdateDto bookUpdateDto);
+    Mono<BookDto> update(BookUpdateDto bookUpdateDto);
 
     void deleteById(long id);
 }
