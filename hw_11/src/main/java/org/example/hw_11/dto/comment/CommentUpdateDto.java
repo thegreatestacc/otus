@@ -17,4 +17,6 @@ public class CommentUpdateDto {
     Long id;
     @NotEmpty
     String comment;
+    @NotEmpty
+    Long bookId;
 }

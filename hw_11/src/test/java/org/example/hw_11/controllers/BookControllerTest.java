@@ -6,7 +6,9 @@ import org.example.hw_11.dto.book.BookUpdateDto;
 import org.example.hw_11.models.Author;
 import org.example.hw_11.models.Book;
 import org.example.hw_11.models.Genre;
+import org.example.hw_11.repositories.AuthorRepository;
 import org.example.hw_11.repositories.BookRepository;
+import org.example.hw_11.repositories.GenreRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,18 +42,32 @@ class BookControllerTest {
     private BookController bookController;
 
     @Autowired
-    private BookRepository repository;
+    private BookRepository bookRepository;
+
+    @Autowired
+    private AuthorRepository authorRepository;
+
+    @Autowired
+    private GenreRepository genreRepository;
 
     @BeforeEach
     void setUp() {
-        repository.save(new Book(1L, "Book_Title_1", new Author(1L, "Author_Name_1"), new Genre(1L, "Genre_Name_1"))).blockOptional();
-        repository.save(new Book(2L, "Book_Title_2", new Author(2L, "Author_Name_2"), new Genre(2L, "Genre_Name_2"))).blockOptional();
-        repository.save(new Book(3L, "Book_Title_3", new Author(3L, "Author_Name_3"), new Genre(3L, "Genre_Name_3"))).blockOptional();
+        authorRepository.save(new Author(1L, "Author_Name_1")).blockOptional();
+        authorRepository.save(new Author(2L, "Author_Name_2")).blockOptional();
+        authorRepository.save(new Author(3L, "Author_Name_3")).blockOptional();
+
+        genreRepository.save(new Genre(1L, "Genre_Name_1")).blockOptional();
+        genreRepository.save(new Genre(2L, "Genre_Name_2")).blockOptional();
+        genreRepository.save(new Genre(3L, "Genre_Name_3")).blockOptional();
+
+        bookRepository.save(new Book(1L, "Book_Title_1", new Author(1L, "Author_Name_1"), new Genre(1L, "Genre_Name_1"))).blockOptional();
+        bookRepository.save(new Book(2L, "Book_Title_2", new Author(2L, "Author_Name_2"), new Genre(2L, "Genre_Name_2"))).blockOptional();
+        bookRepository.save(new Book(3L, "Book_Title_3", new Author(3L, "Author_Name_3"), new Genre(3L, "Genre_Name_3"))).blockOptional();
     }
 
     @AfterEach
     void tearDown() {
-        repository.deleteAll().blockOptional();
+        bookRepository.deleteAll().blockOptional();
     }
 
     @Test

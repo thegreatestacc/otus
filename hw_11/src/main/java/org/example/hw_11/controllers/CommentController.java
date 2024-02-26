@@ -40,7 +40,7 @@ public class CommentController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteById(@PathVariable Long id) {
-        commentService.deleteById(id);
+    public Mono<Void> deleteById(@PathVariable Long id) {
+        return commentService.deleteById(id);
     }
 }

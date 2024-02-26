@@ -2,8 +2,11 @@ package org.example.hw_11.controllers;
 
 import org.example.hw_11.dto.comment.CommentDto;
 import org.example.hw_11.dto.comment.CommentUpdateDto;
+import org.example.hw_11.models.Author;
 import org.example.hw_11.models.Book;
 import org.example.hw_11.models.Comment;
+import org.example.hw_11.models.Genre;
+import org.example.hw_11.repositories.BookRepository;
 import org.example.hw_11.repositories.CommentRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,9 +39,20 @@ class CommentControllerTest {
     @Autowired
     private CommentController commentController;
 
+    @Autowired
+    private CommentRepository commentRepository;
+
+    @Autowired
+    private BookRepository bookRepository;
+
     @BeforeEach
-    void setUp(@Autowired CommentRepository repository) {
-        repository.save(new Comment(1L, "Comment_1", new Book()))
+    void setUp() {
+        commentRepository.save(new Comment(1L, "Comment_1", new Book(1L, "title", new Author(), new Genre())))
+                .blockOptional();
+
+        bookRepository.save(new Book(1L, "title",
+                        new Author(1L, "author_name"),
+                        new Genre(1L, "genre_name")))
                 .blockOptional();
     }
 
@@ -68,6 +82,7 @@ class CommentControllerTest {
         CommentUpdateDto dto = new CommentUpdateDto();
         dto.setId(id);
         dto.setComment("new_comment");
+        dto.setBookId(1L);
 
         CommentDto actual = commentController
                 .updateComment(dto)

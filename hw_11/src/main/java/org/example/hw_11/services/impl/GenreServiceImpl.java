@@ -21,6 +21,7 @@ public class GenreServiceImpl implements GenreService {
     @Override
     public Flux<GenreDto> findAll() {
         return genreRepository.findAll()
-                .map(genreMapper::genreToDto);
+                .map(genreMapper::genreToDto)
+                .switchIfEmpty(Flux.empty());
     }
 }

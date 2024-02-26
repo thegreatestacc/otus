@@ -15,5 +15,5 @@ public interface BookService {
 
     Mono<BookDto> update(BookUpdateDto bookUpdateDto);
 
-    void deleteById(long id);
+    Mono<Void> deleteById(long id);
 }

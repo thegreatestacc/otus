@@ -5,6 +5,4 @@ import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import reactor.core.publisher.Mono;
 
 public interface GenreRepository extends ReactiveMongoRepository<Genre, Long> {
-
-    Mono<Genre> findById(long id);
 }

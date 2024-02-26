@@ -5,8 +5,4 @@ import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import reactor.core.publisher.Mono;
 
 public interface CommentRepository extends ReactiveMongoRepository<Comment, Long> {
-    Mono<Comment> findById(long id);
-
-    Mono<Void> deleteById(Long id);
-
 }

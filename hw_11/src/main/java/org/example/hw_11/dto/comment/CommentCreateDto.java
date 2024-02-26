@@ -17,4 +17,6 @@ public class CommentCreateDto {
     Long id;
     @NotEmpty
     String comment;
+    @NotEmpty
+    Long bookId;
 }
