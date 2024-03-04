@@ -1,20 +1,14 @@
-package org.example.hw_12.models;
+package org.example.hw_12.dto.user;
 
-import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "users")
-@Entity
 @Builder
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class UserDto {
     Long id;
     String userName;
     String password;
