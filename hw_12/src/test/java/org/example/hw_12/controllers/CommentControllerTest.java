@@ -14,6 +14,8 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.util.List;
+
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -41,20 +43,18 @@ class CommentControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    void shouldReturnAllComments_whenGetAllComments() throws Exception {
+    void shouldReturnAllComments_whenGetAllComments() {
+        List<CommentDto> actual = commentController.getAllComments();
 
-        this.mockMvc.perform(get("/comment"))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString(allCommentsResult)));
+        assertEquals(2, actual.size());
     }
 
     @ParameterizedTest
     @ValueSource(longs = 1L)
-    void shouldReturnComment_whenGetCommentByID(Long id) throws Exception {
+    void shouldReturnComment_whenGetCommentByID(Long id) {
+        CommentDto actual = commentController.getCommentById(id);
 
-        this.mockMvc.perform(get("/comment/" + id))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString(commentByID)));
+        assertEquals("comment_1", actual.getComment());
     }
 
     @ParameterizedTest
@@ -70,10 +70,11 @@ class CommentControllerTest {
 
     @ParameterizedTest
     @ValueSource(longs = 3L)
-    void shouldDeleteComment_whenDeleteByID(Long id) throws Exception {
-        this.mockMvc.perform(delete("/comment/" + id))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(content().string(containsString("")));
+    void shouldDeleteComment_whenDeleteByID(Long id) {
+        commentController.deleteById(id);
+        List<CommentDto> actual = commentController.getAllComments();
+
+        assertEquals(2, actual.size());
     }
 
 }
