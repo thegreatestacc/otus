@@ -19,8 +19,6 @@ public class HomeController {
 
     private final BookService bookService;
 
-
-
     @GetMapping("/all")
     public String showAllBooks(@RequestParam(required = false) String login, Model model) {
         List<BookDto> books = bookService.findAll();
@@ -53,5 +51,4 @@ public class HomeController {
         bookService.update(bookUpdateDto);
         return "redirect:/home/all";
     }
-
 }
