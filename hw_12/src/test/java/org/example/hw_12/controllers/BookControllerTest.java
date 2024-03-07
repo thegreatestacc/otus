@@ -1,29 +1,27 @@
 package org.example.hw_12.controllers;
 
-import org.example.hw_12.dto.book.BookCreateDto;
 import org.example.hw_12.dto.book.BookDto;
-import org.example.hw_12.dto.book.BookUpdateDto;
-import org.example.hw_12.models.Author;
-import org.example.hw_12.models.Book;
-import org.example.hw_12.models.Genre;
-import org.example.hw_12.repositories.BookRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
-import java.util.List;
+import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @Testcontainers
@@ -33,12 +31,24 @@ class BookControllerTest {
     @Autowired
     private BookController bookController;
 
-    @Autowired
-    private BookRepository bookRepository;
-
     @Container
     @ServiceConnection
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15");
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    private final ObjectMapper mapper = new ObjectMapper();
+
+    private final String BASE_URL = "http://localhost:8089";
+
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+
+    @BeforeEach
+    void setUp() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+    }
 
     @Test
     void contextLoads() {
@@ -46,56 +56,71 @@ class BookControllerTest {
     }
 
     @Test
-    void shouldReturnOkStatus_whenGetAllBooksRequest() {
-        List<BookDto> actual = bookController.getAllBooks();
-        assertEquals(2, actual.size());
-        assertEquals("BookTitle_2", actual.get(0).getTitle());
-    }
-
-
-    @ParameterizedTest
-    @ValueSource(longs = 1)
-    void shouldReturnBook_whenGetBookByID(Long id) {
-        BookDto actual = bookController.getBookById(id);
-        assertEquals("BookTitle_1", actual.getTitle());
+    void shouldReturnOkStatus_whenGetAllBooksRequest() throws Exception {
+        mockMvc
+                .perform(get(this.BASE_URL + "/home/all")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(model().attributeExists("books"))
+                .andExpect(status().isOk());
     }
 
     @Test
-    void shouldUpdateBook_whenUpdateBook() {
-        BookUpdateDto dto = new BookUpdateDto();
-        dto.setBookId(1L);
-        dto.setTitle("new_title");
-        dto.setAuthorId(1L);
-        dto.setGenreId(2L);
-
-        BookDto updatedBook = bookController.updateBook(dto);
-
-        assertEquals("new_title", updatedBook.getTitle());
+    void shouldRedirectToLoginPage_whenUserNotAuthorized() throws Exception {
+        mockMvc
+                .perform(get(this.BASE_URL + "/1")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(redirectedUrl("http://localhost:8089/login"));
     }
 
     @Test
-    void shouldReturnOkStatus_whenInsertBookRequest() {
-        BookCreateDto dto = new BookCreateDto();
-        dto.setBookId(4L);
-        dto.setTitle("Title_10");
-        dto.setAuthorId(1L);
-        dto.setGenreId(2L);
-
-        bookRepository.deleteAll();
-
-        var actual = bookController.addBook(dto);
-        var all = bookController.getAllBooks();
-
-        assertEquals(1, all.size());
-        Assertions.assertEquals("Title_10", actual.getTitle());
+    @WithMockUser(username = "harry", password = "potter")
+    void shouldReturnBook_whenGetBookByID() throws Exception {
+        mockMvc
+                .perform(get(this.BASE_URL + "/1")
+                        .with(httpBasic("harry", "potter"))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk());
     }
 
-    @ParameterizedTest
-    @ValueSource(longs = 1L)
-    void shouldDeleteBook_whenDeleteByID(Long id) {
-        bookController.deleteById(id);
-        List<BookDto> actual = bookController.getAllBooks();
+    @Test
+    void shouldReturnOkStatus_whenInsertBookRequest() throws Exception {
+        mockMvc
+                .perform(
+                        post(this.BASE_URL + "/create")
+                                .with(httpBasic("harry", "potter"))
+                                .content(mapper.writeValueAsString(new BookDto(1L, "new_title", 2L, 3L)))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isCreated());
+    }
 
-        assertEquals(2, actual.size());
+    @Test
+    void shouldUpdateBook_whenUpdateBook() throws Exception {
+        mockMvc
+                .perform(
+                        patch(this.BASE_URL + "/update")
+                                .with(httpBasic("harry", "potter"))
+                                .content(mapper.writeValueAsString(new BookDto(1L, "new_title", 2L, 3L)))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldDeleteBook_whenDeleteByID() throws Exception {
+        mockMvc
+                .perform(
+                        delete(this.BASE_URL + "/1")
+                                .with(httpBasic("harry", "potter"))
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isNoContent());
     }
 }

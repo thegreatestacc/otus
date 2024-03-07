@@ -29,6 +29,7 @@ public class BookController {
     }
 
     @PostMapping("/create")
+    @ResponseStatus(HttpStatus.CREATED)
     public BookDto addBook(@RequestBody @Valid BookCreateDto bookCreateDto) {
         return bookService.create(bookCreateDto);
     }
