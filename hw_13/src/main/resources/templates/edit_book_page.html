@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+</head>
+<body>
+<form method="post" action="/books/editBook" th:object="${bookToEdit}">
+    <input type="number" name="id" , placeholder="Id" th:value="${bookToEdit.id}">
+    <input type="text" name="title" , placeholder="Title" th:value="${bookToEdit.title}">
+    <input type="number" name="authorId" , placeholder="Author id" th:value="${bookToEdit.getAuthor().id}">
+    <input type="number" name="genreId" , placeholder="Genre id" th:value="${bookToEdit.getGenre().id}">
+    <input type="submit" value="Edit">
+</form>
+</body>
+</html>

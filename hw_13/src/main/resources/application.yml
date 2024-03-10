@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5433/postgres
+    username: admin
+    password:
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_schema: hw_13
+    generate-ddl: false
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  flyway:
+    schemas: hw_13
+    user: admin
+
+server:
+  port: 8089
