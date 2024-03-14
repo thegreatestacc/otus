@@ -1,0 +1,11 @@
+spring:
+  data:
+    mongodb:
+      database: application_db
+      host: localhost
+      port: 27018
+  datasource:
+    url: jdbc:mongodb://localhost:27018/application_db
+    driver-class-name: 'mongodb.jdbc.MongoDriver'
+    username:
+    password:

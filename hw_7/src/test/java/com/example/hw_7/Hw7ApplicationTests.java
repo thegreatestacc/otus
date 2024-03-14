@@ -1,13 +1,13 @@
-package com.example.hw_2;
+package com.example.hw_7;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class Hw2ApplicationTests {
+class Hw7ApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    void contextLoads() {
+    }
 
 }

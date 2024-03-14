@@ -1,0 +1,19 @@
+### Send POST request with json body
+POST http://localhost:8089/add
+Content-Type: application/json
+
+{
+  "id": 13,
+  "title": "title_13",
+  "author": {
+    "id": 1,
+    "fullName": "Author_1"
+  },
+  "genre": {
+    "id": 2,
+    "name": "Genre_2"
+  }
+}
+
+### Send GET request
+GET http://localhost:8089/all
