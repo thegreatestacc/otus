@@ -1,6 +1,7 @@
 package org.example.hw_13.config;
 
 import lombok.RequiredArgsConstructor;
+import org.example.hw_13.models.roles.ApplicationRole;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -28,9 +29,9 @@ public class WebSecurityConfig {
         http
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/", "/home/all").permitAll()
-                        .requestMatchers("/books/create").authenticated()
-                        .requestMatchers("/books/delete/").authenticated()
-                        .requestMatchers("/books/editBook/").authenticated()
+                        .requestMatchers("/books/create").hasRole(ApplicationRole.USER.name())
+                        .requestMatchers("/books/delete/").hasRole(ApplicationRole.ADMIN.name())
+                        .requestMatchers("/books/editBook/").hasRole(ApplicationRole.USER.name())
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form

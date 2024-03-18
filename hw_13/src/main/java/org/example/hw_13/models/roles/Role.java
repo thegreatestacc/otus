@@ -1,6 +1,5 @@
 package org.example.hw_13.models.roles;
 
-public enum Role {
-    ADMIN,
-    USER
+public interface Role {
+    boolean hasRole(Role role);
 }

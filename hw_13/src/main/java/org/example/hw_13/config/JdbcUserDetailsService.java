@@ -1,6 +1,5 @@
 package org.example.hw_13.config;
 
-import org.example.hw_13.exceptions.NotFoundException;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
 import org.springframework.security.core.userdetails.User;
@@ -44,6 +43,6 @@ public class JdbcUserDetailsService extends MappingSqlQuery<UserDetails>
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return Optional.ofNullable(this.findObjectByNamedParam(Map.of("username", username)))
-                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE.formatted(username)));
+                .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_MESSAGE.formatted(username)));
     }
 }

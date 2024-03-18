@@ -9,6 +9,7 @@ import org.example.hw_13.mappers.BookMapper;
 import org.example.hw_13.models.Book;
 import org.example.hw_13.repositories.BookRepository;
 import org.example.hw_13.services.BookService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +43,7 @@ public class BookServiceImpl implements BookService {
                 .collect(Collectors.toList());
     }
 
+    @PreAuthorize("hasPermission(#bookCreateDto, 'WRITE')")
     @Transactional
     @Override
     public BookDto create(BookCreateDto bookCreateDto) {

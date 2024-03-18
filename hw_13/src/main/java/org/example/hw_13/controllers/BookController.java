@@ -33,7 +33,6 @@ public class BookController {
         return bookService.findById(id);
     }
 
-    @PreAuthorize("hasPermission(#bookCreateDto, 'WRITE')")
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public BookDto addBook(@RequestBody @Valid BookCreateDto bookCreateDto) {
