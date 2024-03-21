@@ -1,6 +1,9 @@
 package org.example.hw_4.dao;
 
-import com.opencsv.*;
+import com.opencsv.CSVParser;
+import com.opencsv.CSVParserBuilder;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
 import lombok.RequiredArgsConstructor;
 import org.example.hw_4.config.TestFileNameProvider;
@@ -22,9 +25,9 @@ public class CsvQuestionDao implements QuestionDao {
     @Override
     public List<Question> findAll() {
         List<String> records = new ArrayList<>();
-        InputStream resourceAsStream = readResource(fileNameProvider.getTestFileName());
         CSVParser parser = getCsvParser();
-        try (Reader reader = new BufferedReader(new InputStreamReader(resourceAsStream));
+        try (InputStream resourceAsStream = readResource(fileNameProvider.getTestFileName());
+             Reader reader = new BufferedReader(new InputStreamReader(resourceAsStream));
              CSVReader csvReader = new CSVReaderBuilder(reader)
                      .withCSVParser(parser).build()) {
             csvReader.readAll().forEach(arr -> records.addAll(Arrays.asList(arr)));
