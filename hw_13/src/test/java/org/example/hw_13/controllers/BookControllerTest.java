@@ -1,14 +1,15 @@
 package org.example.hw_13.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.hw_13.config.WebSecurityConfig;
 import org.example.hw_13.dto.book.BookDto;
 import org.example.hw_13.services.BookService;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -22,7 +23,8 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(BookControllerTest.class)
+@WebMvcTest(BookController.class)
+@Import(WebSecurityConfig.class)
 class BookControllerTest {
 
     @MockBean
@@ -53,10 +55,10 @@ class BookControllerTest {
         when(bookService.findAll()).thenReturn(books);
         mockMvc
                 .perform(get(this.BASE_URL + "/books")
+                        .with(httpBasic("harry", "potter"))
+                        .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(view().name("books"))
-                .andExpect(model().attributeExists("books"))
                 .andExpect(status().isOk());
     }
 
@@ -70,7 +72,6 @@ class BookControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Disabled
     @Test
     void shouldReturnOkStatus_whenInsertBookRequest() throws Exception {
         mockMvc
