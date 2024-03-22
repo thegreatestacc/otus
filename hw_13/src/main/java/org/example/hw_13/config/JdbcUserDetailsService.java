@@ -22,12 +22,12 @@ public class JdbcUserDetailsService extends MappingSqlQuery<UserDetails>
     public JdbcUserDetailsService(DataSource ds) {
         super(ds,
                     """
-                    select 
-                    u.user_name,
-                    u.password 
-                    from hw_13.users u
-                    where u.user_name = :username
-                    """);
+                            select 
+                            u.user_name,
+                            u.password 
+                            from hw_13.users u
+                            where u.user_name = :username
+                            """);
         this.declareParameter(new SqlParameter("username", Types.VARCHAR));
         this.compile();
     }
